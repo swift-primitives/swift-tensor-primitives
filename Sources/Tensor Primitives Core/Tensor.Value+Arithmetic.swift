@@ -26,7 +26,7 @@ where
     ) throws(Tensor.Broadcast.Error) -> Tensor.Value<Element, Rank, Tensor.Layout.Order.Row> {
         let aligned = try Tensor.Broadcast.align(self._shape, other._shape)
         let count = aligned.count
-        var newStorage = Buffer<Element>.Linear(
+        var newStorage = Buffer<Storage<Element>.Heap>.Linear(
             minimumCapacity: Index<Element>.Count(count)
         )
         // Naive row-major parallel iteration via Swift.Sequence zip.
@@ -49,7 +49,7 @@ where
     ) throws(Tensor.Broadcast.Error) -> Tensor.Value<Element, Rank, Tensor.Layout.Order.Row> {
         let aligned = try Tensor.Broadcast.align(self._shape, other._shape)
         let count = aligned.count
-        var newStorage = Buffer<Element>.Linear(
+        var newStorage = Buffer<Storage<Element>.Heap>.Linear(
             minimumCapacity: Index<Element>.Count(count)
         )
         for (a, b) in zip(self._storage, other._storage) {
@@ -75,7 +75,7 @@ where
     ) throws(Tensor.Broadcast.Error) -> Tensor.Value<Element, Rank, Tensor.Layout.Order.Row> {
         let aligned = try Tensor.Broadcast.align(self._shape, other._shape)
         let count = aligned.count
-        var newStorage = Buffer<Element>.Linear(
+        var newStorage = Buffer<Storage<Element>.Heap>.Linear(
             minimumCapacity: Index<Element>.Count(count)
         )
         for (a, b) in zip(self._storage, other._storage) {
@@ -92,7 +92,7 @@ where
     @inlinable
     public func scaled(by scalar: Element) -> Tensor.Value<Element, Rank, Tensor.Layout.Order.Row> {
         let count = self._shape.count
-        var newStorage = Buffer<Element>.Linear(
+        var newStorage = Buffer<Storage<Element>.Heap>.Linear(
             minimumCapacity: Index<Element>.Count(count)
         )
         // Single-buffer scaling via Swift.Sequence iteration on Buffer.Linear.

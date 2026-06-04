@@ -12,8 +12,8 @@
 extension Tensor.Storage {
     /// Zero-size witness marking a page-aligned storage policy.
     ///
-    /// Tensors with this witness back their elements with `Buffer.Aligned`
-    /// from `swift-buffer-primitives` — page-aligned raw-byte storage. Use
+    /// Tensors with this witness back their elements with `Memory.Aligned`
+    /// from `swift-memory-aligned-primitives` — page-aligned raw-byte storage. Use
     /// when the element buffer must satisfy a hard alignment guarantee for
     /// direct I/O, GPU bridging, or SIMD-aligned access.
     public struct Aligned: Sendable {

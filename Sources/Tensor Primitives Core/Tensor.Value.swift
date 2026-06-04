@@ -17,7 +17,7 @@ extension Tensor {
     /// runtime in the accompanying `Shape<Rank>`; the `Layout` witness
     /// drives per-layout dispatch at zero runtime cost.
     ///
-    /// Storage is exclusively owned via `Buffer.Linear<Element>`. The tensor
+    /// Storage is exclusively owned via `Buffer<Storage<Element>.Heap>.Linear`. The tensor
     /// is `~Copyable` to express that ownership; the only way to share data
     /// across uses is via `Tensor.View` (borrowed) and
     /// `Tensor.View.Mutable` (exclusive-borrowed) which are themselves
@@ -37,7 +37,7 @@ extension Tensor {
 
         /// Heap-backed element storage.
         @usableFromInline
-        package var _storage: Buffer<Element>.Linear
+        package var _storage: Buffer<Storage<Element>.Heap>.Linear
 
         /// Canonical initializer per `[API-IMPL-008]`.
         ///
@@ -49,7 +49,7 @@ extension Tensor {
         public init(
             shape: Tensor.Shape<Rank>,
             strides: Tensor.Strides<Rank>,
-            storage: consuming Buffer<Element>.Linear
+            storage: consuming Buffer<Storage<Element>.Heap>.Linear
         ) {
             self._shape = shape
             self._strides = strides

@@ -14,8 +14,8 @@ extension Tensor {
     ///
     /// Storage witnesses parameterize how a tensor's element buffer is laid
     /// out. Two are provided at L1:
-    /// - `Tensor.Storage.Owned` — heap-backed via `Buffer.Linear<Element>`.
+    /// - `Tensor.Storage.Owned` — heap-backed via `Buffer<Storage<Element>.Heap>.Linear`.
     /// - `Tensor.Storage.Aligned` — page-aligned for GPU-bridge / direct-I/O
-    ///   preparation via `Buffer.Aligned<UInt8>`.
+    ///   preparation via `Memory.Aligned<UInt8>`.
     public enum Storage {}
 }

@@ -20,7 +20,7 @@ extension Tensor.Value where Element: Copyable {
         _ transform: (Element) throws(E) -> NewElement
     ) throws(E) -> Tensor.Value<NewElement, Rank, Tensor.Layout.Order.Row> {
         let count = self._shape.count
-        var storage = Buffer<NewElement>.Linear(
+        var storage = Buffer<Storage<NewElement>.Heap>.Linear(
             minimumCapacity: Index<NewElement>.Count(count)
         )
         // Iterate elements via Swift.Sequence (Buffer.Linear: Sequence where

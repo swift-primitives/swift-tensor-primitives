@@ -28,7 +28,7 @@ extension Tensor.Value where Element: Copyable, Layout == Tensor.Layout.Order.Ro
         if expected != actual {
             throw .elementCountMismatch(expected: expected, actual: actual)
         }
-        var storage = Buffer<Element>.Linear(
+        var storage = Buffer<Storage<Element>.Heap>.Linear(
             minimumCapacity: Index<Element>.Count(expected)
         )
         for element in elements {

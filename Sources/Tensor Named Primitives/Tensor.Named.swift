@@ -28,14 +28,14 @@ extension Tensor {
 
         /// Heap-backed element storage.
         @usableFromInline
-        package var _storage: Buffer<Element>.Linear
+        package var _storage: Buffer<Storage<Element>.Heap>.Linear
 
         /// Canonical initializer.
         ///
         /// - Parameter storage: Element storage; size MUST equal the product
         ///   of all `each Axis.size`.
         @inlinable
-        public init(storage: consuming Buffer<Element>.Linear) {
+        public init(storage: consuming Buffer<Storage<Element>.Heap>.Linear) {
             var dims: [Cardinal] = []
             for axisSize in repeat (each Axis).size {
                 dims.append(Cardinal(UInt(bitPattern: axisSize)))

@@ -12,7 +12,7 @@
 extension Tensor.Storage {
     /// Zero-size witness marking a heap-backed owned storage policy.
     ///
-    /// Tensors with this witness back their elements with `Buffer.Linear<Element>`
+    /// Tensors with this witness back their elements with `Buffer<Storage<Element>.Heap>.Linear`
     /// from `swift-buffer-primitives` — heap-allocated, exclusively-owned,
     /// `~Copyable` storage. This is the default.
     public struct Owned: Sendable {
