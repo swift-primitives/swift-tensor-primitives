@@ -26,14 +26,17 @@ where
     ) throws(Tensor.Broadcast.Error) -> Tensor.Value<Element, Rank, Tensor.Layout.Order.Row> {
         let aligned = try Tensor.Broadcast.align(self._shape, other._shape)
         let count = aligned.count
-        var newStorage = Buffer<Storage<Element>.Heap>.Linear(
+        var newStorage = Buffer<Storage_Primitive.Storage<Element>.Heap>.Linear(
             minimumCapacity: Index<Element>.Count(count)
         )
-        // Naive row-major parallel iteration via Swift.Sequence zip.
-        // `Buffer.Linear: Swift.Sequence where Element: Copyable` enables this
-        // without escaping to flat-index arithmetic per [IMPL-033].
-        for (a, b) in zip(self._storage, other._storage) {
-            newStorage.append(a + b)
+        // Naive row-major parallel iteration by element index. The W3 substrate
+        // `Buffer<Storage<Element>.Heap>.Linear` vends index-subscript + `count`
+        // (the institute `Sequenceable`/`Iterable` surface, not `Swift.Sequence`),
+        // so parallel traversal reads both operands at the shared linear offset.
+        let n = Int(bitPattern: count)
+        for i in 0..<n {
+            let idx = Index<Element>(_unchecked: Ordinal(UInt(i)))
+            newStorage.append(self._storage[idx] + other._storage[idx])
         }
         return Tensor.Value<Element, Rank, Tensor.Layout.Order.Row>(
             shape: aligned,
@@ -49,11 +52,13 @@ where
     ) throws(Tensor.Broadcast.Error) -> Tensor.Value<Element, Rank, Tensor.Layout.Order.Row> {
         let aligned = try Tensor.Broadcast.align(self._shape, other._shape)
         let count = aligned.count
-        var newStorage = Buffer<Storage<Element>.Heap>.Linear(
+        var newStorage = Buffer<Storage_Primitive.Storage<Element>.Heap>.Linear(
             minimumCapacity: Index<Element>.Count(count)
         )
-        for (a, b) in zip(self._storage, other._storage) {
-            newStorage.append(a - b)
+        let n = Int(bitPattern: count)
+        for i in 0..<n {
+            let idx = Index<Element>(_unchecked: Ordinal(UInt(i)))
+            newStorage.append(self._storage[idx] - other._storage[idx])
         }
         return Tensor.Value<Element, Rank, Tensor.Layout.Order.Row>(
             shape: aligned,
@@ -75,11 +80,13 @@ where
     ) throws(Tensor.Broadcast.Error) -> Tensor.Value<Element, Rank, Tensor.Layout.Order.Row> {
         let aligned = try Tensor.Broadcast.align(self._shape, other._shape)
         let count = aligned.count
-        var newStorage = Buffer<Storage<Element>.Heap>.Linear(
+        var newStorage = Buffer<Storage_Primitive.Storage<Element>.Heap>.Linear(
             minimumCapacity: Index<Element>.Count(count)
         )
-        for (a, b) in zip(self._storage, other._storage) {
-            newStorage.append(a * b)
+        let n = Int(bitPattern: count)
+        for i in 0..<n {
+            let idx = Index<Element>(_unchecked: Ordinal(UInt(i)))
+            newStorage.append(self._storage[idx] * other._storage[idx])
         }
         return Tensor.Value<Element, Rank, Tensor.Layout.Order.Row>(
             shape: aligned,
@@ -92,7 +99,7 @@ where
     @inlinable
     public func scaled(by scalar: Element) -> Tensor.Value<Element, Rank, Tensor.Layout.Order.Row> {
         let count = self._shape.count
-        var newStorage = Buffer<Storage<Element>.Heap>.Linear(
+        var newStorage = Buffer<Storage_Primitive.Storage<Element>.Heap>.Linear(
             minimumCapacity: Index<Element>.Count(count)
         )
         // Single-buffer scaling via Swift.Sequence iteration on Buffer.Linear.
