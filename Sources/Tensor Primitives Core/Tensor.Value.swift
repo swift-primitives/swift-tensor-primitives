@@ -37,7 +37,7 @@ extension Tensor {
 
         /// Heap-backed element storage.
         @usableFromInline
-        package var _storage: Buffer<Storage<Element>.Heap>.Linear
+        package var _storage: Buffer<Storage_Primitive.Storage<Element>.Heap>.Linear
 
         /// Canonical initializer per `[API-IMPL-008]`.
         ///
@@ -49,7 +49,7 @@ extension Tensor {
         public init(
             shape: Tensor.Shape<Rank>,
             strides: Tensor.Strides<Rank>,
-            storage: consuming Buffer<Storage<Element>.Heap>.Linear
+            storage: consuming Buffer<Storage_Primitive.Storage<Element>.Heap>.Linear
         ) {
             self._shape = shape
             self._strides = strides

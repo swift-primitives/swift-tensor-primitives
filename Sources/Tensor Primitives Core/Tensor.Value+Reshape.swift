@@ -30,7 +30,7 @@ extension Tensor.Value where Element: Copyable {
         if fromCount != toCount {
             throw .productNotPreserved(from: fromCount, to: toCount)
         }
-        var storage = Buffer<Storage<Element>.Heap>.Linear(
+        var storage = Buffer<Storage_Primitive.Storage<Element>.Heap>.Linear(
             minimumCapacity: Index<Element>.Count(toCount)
         )
         // Sequential copy via Buffer.Linear's Swift.Sequence iteration.
