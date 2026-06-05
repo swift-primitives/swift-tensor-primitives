@@ -28,7 +28,7 @@ extension Tensor.Value where Element: Copyable {
         newDims[1] = _shape.dims[0]
         let newShape = Tensor.Shape<2>(newDims)
         let count = newShape.count
-        var newStorage = Buffer<Storage_Primitive.Storage<Element>.Heap>.Linear(
+        var newStorage = Buffer<Storage_Primitive.Storage<Element>.Contiguous<Memory.Heap<Element>>>.Linear(
             minimumCapacity: Index<Element>.Count(count)
         )
         // Stride math at the L1 boundary: linearization formula

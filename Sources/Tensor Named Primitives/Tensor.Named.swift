@@ -10,6 +10,8 @@
 // ===----------------------------------------------------------------------===//
 
 public import Tensor_Primitives_Core
+public import Memory_Heap_Primitives
+public import Storage_Contiguous_Primitives
 
 extension Tensor {
     /// A named-axis tensor in the Dex style.
@@ -28,14 +30,14 @@ extension Tensor {
 
         /// Heap-backed element storage.
         @usableFromInline
-        package var _storage: Buffer<Storage_Primitive.Storage<Element>.Heap>.Linear
+        package var _storage: Buffer<Storage_Primitive.Storage<Element>.Contiguous<Memory.Heap<Element>>>.Linear
 
         /// Canonical initializer.
         ///
         /// - Parameter storage: Element storage; size MUST equal the product
         ///   of all `each Axis.size`.
         @inlinable
-        public init(storage: consuming Buffer<Storage_Primitive.Storage<Element>.Heap>.Linear) {
+        public init(storage: consuming Buffer<Storage_Primitive.Storage<Element>.Contiguous<Memory.Heap<Element>>>.Linear) {
             var dims: [Cardinal] = []
             for axisSize in repeat (each Axis).size {
                 dims.append(Cardinal(UInt(bitPattern: axisSize)))

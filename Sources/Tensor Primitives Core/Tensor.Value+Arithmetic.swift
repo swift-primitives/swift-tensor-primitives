@@ -26,11 +26,11 @@ where
     ) throws(Tensor.Broadcast.Error) -> Tensor.Value<Element, Rank, Tensor.Layout.Order.Row> {
         let aligned = try Tensor.Broadcast.align(self._shape, other._shape)
         let count = aligned.count
-        var newStorage = Buffer<Storage_Primitive.Storage<Element>.Heap>.Linear(
+        var newStorage = Buffer<Storage_Primitive.Storage<Element>.Contiguous<Memory.Heap<Element>>>.Linear(
             minimumCapacity: Index<Element>.Count(count)
         )
         // Naive row-major parallel iteration by element index. The W3 substrate
-        // `Buffer<Storage<Element>.Heap>.Linear` vends index-subscript + `count`
+        // `Buffer<Storage<Element>.Contiguous<Memory.Heap<Element>>>.Linear` vends index-subscript + `count`
         // (the institute `Sequenceable`/`Iterable` surface, not `Swift.Sequence`),
         // so parallel traversal reads both operands at the shared linear offset.
         let n = Int(bitPattern: count)
@@ -52,7 +52,7 @@ where
     ) throws(Tensor.Broadcast.Error) -> Tensor.Value<Element, Rank, Tensor.Layout.Order.Row> {
         let aligned = try Tensor.Broadcast.align(self._shape, other._shape)
         let count = aligned.count
-        var newStorage = Buffer<Storage_Primitive.Storage<Element>.Heap>.Linear(
+        var newStorage = Buffer<Storage_Primitive.Storage<Element>.Contiguous<Memory.Heap<Element>>>.Linear(
             minimumCapacity: Index<Element>.Count(count)
         )
         let n = Int(bitPattern: count)
@@ -80,7 +80,7 @@ where
     ) throws(Tensor.Broadcast.Error) -> Tensor.Value<Element, Rank, Tensor.Layout.Order.Row> {
         let aligned = try Tensor.Broadcast.align(self._shape, other._shape)
         let count = aligned.count
-        var newStorage = Buffer<Storage_Primitive.Storage<Element>.Heap>.Linear(
+        var newStorage = Buffer<Storage_Primitive.Storage<Element>.Contiguous<Memory.Heap<Element>>>.Linear(
             minimumCapacity: Index<Element>.Count(count)
         )
         let n = Int(bitPattern: count)
@@ -99,7 +99,7 @@ where
     @inlinable
     public func scaled(by scalar: Element) -> Tensor.Value<Element, Rank, Tensor.Layout.Order.Row> {
         let count = self._shape.count
-        var newStorage = Buffer<Storage_Primitive.Storage<Element>.Heap>.Linear(
+        var newStorage = Buffer<Storage_Primitive.Storage<Element>.Contiguous<Memory.Heap<Element>>>.Linear(
             minimumCapacity: Index<Element>.Count(count)
         )
         // Single-buffer scaling via Swift.Sequence iteration on Buffer.Linear.

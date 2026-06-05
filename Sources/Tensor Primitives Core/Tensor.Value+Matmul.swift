@@ -41,7 +41,7 @@ where
         let resultShape = Tensor.Shape<2>(resultDims)
         let total = resultShape.count
 
-        var storage = Buffer<Storage_Primitive.Storage<Element>.Heap>.Linear(
+        var storage = Buffer<Storage_Primitive.Storage<Element>.Contiguous<Memory.Heap<Element>>>.Linear(
             minimumCapacity: Index<Element>.Count(total)
         )
 

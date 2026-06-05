@@ -10,6 +10,8 @@
 // ===----------------------------------------------------------------------===//
 
 public import Tensor_Primitives_Core
+public import Memory_Heap_Primitives
+public import Storage_Contiguous_Primitives
 
 extension Tensor.Dynamic {
     /// A rank-erased tensor whose dimensions are data-dependent.
@@ -27,13 +29,13 @@ extension Tensor.Dynamic {
 
         /// Heap-backed element storage.
         @usableFromInline
-        package var _storage: Buffer<Storage_Primitive.Storage<Element>.Heap>.Linear
+        package var _storage: Buffer<Storage_Primitive.Storage<Element>.Contiguous<Memory.Heap<Element>>>.Linear
 
         /// Canonical initializer per `[API-IMPL-008]`.
         @inlinable
         public init(
             shape: Tensor.Dynamic.Shape,
-            storage: consuming Buffer<Storage_Primitive.Storage<Element>.Heap>.Linear
+            storage: consuming Buffer<Storage_Primitive.Storage<Element>.Contiguous<Memory.Heap<Element>>>.Linear
         ) {
             self._shape = shape
             self._storage = storage

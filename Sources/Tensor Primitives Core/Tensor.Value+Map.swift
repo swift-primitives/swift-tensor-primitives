@@ -20,11 +20,11 @@ extension Tensor.Value where Element: Copyable {
         _ transform: (Element) throws(E) -> NewElement
     ) throws(E) -> Tensor.Value<NewElement, Rank, Tensor.Layout.Order.Row> {
         let count = self._shape.count
-        var storage = Buffer<Storage_Primitive.Storage<NewElement>.Heap>.Linear(
+        var storage = Buffer<Storage_Primitive.Storage<NewElement>.Contiguous<Memory.Heap<NewElement>>>.Linear(
             minimumCapacity: Index<NewElement>.Count(count)
         )
         // Iterate elements by linear index. The W3 substrate
-        // `Buffer<Storage<Element>.Heap>.Linear` vends index-subscript + `count`
+        // `Buffer<Storage<Element>.Contiguous<Memory.Heap<Element>>>.Linear` vends index-subscript + `count`
         // (the institute `Sequenceable`/`Iterable` surface, not `Swift.Sequence`).
         // The index-driven `for-in` over `0..<n` preserves the typed throw shape
         // because the body propagates `throws(E)` natively.

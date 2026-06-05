@@ -47,6 +47,7 @@ let package = Package(
         .package(url: "https://github.com/swift-primitives/swift-format-primitives.git", branch: "main"),
         .package(url: "https://github.com/swift-primitives/swift-sequence-primitives.git", branch: "main"),
         .package(url: "https://github.com/swift-primitives/swift-vector-primitives.git", branch: "main"),
+        .package(url: "https://github.com/swift-primitives/swift-memory-heap-primitives.git", branch: "main"),
     ],
     targets: [
 
