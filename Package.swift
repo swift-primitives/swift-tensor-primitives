@@ -48,6 +48,7 @@ let package = Package(
         .package(url: "https://github.com/swift-primitives/swift-sequence-primitives.git", branch: "main"),
         .package(url: "https://github.com/swift-primitives/swift-vector-primitives.git", branch: "main"),
         .package(url: "https://github.com/swift-primitives/swift-memory-heap-primitives.git", branch: "main"),
+        .package(url: "https://github.com/swift-primitives/swift-memory-allocation-primitives.git", branch: "main"),
     ],
     targets: [
 
@@ -67,6 +68,8 @@ let package = Package(
                 .product(name: "Storage Primitives", package: "swift-storage-primitives"),
                 .product(name: "Range Primitives", package: "swift-range-primitives"),
                 .product(name: "Memory Primitives", package: "swift-memory-primitives"),
+                .product(name: "Memory Allocator Primitive", package: "swift-memory-allocation-primitives"),
+                .product(name: "Memory Allocator Protocol Primitives", package: "swift-memory-allocation-primitives"),
                 .product(name: "Numeric Primitives", package: "swift-numeric-primitives"),
                 .product(name: "Algebra Ring Primitives", package: "swift-algebra-primitives"),
                 .product(name: "Error Primitives", package: "swift-error-primitives"),
