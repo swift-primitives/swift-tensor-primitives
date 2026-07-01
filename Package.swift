@@ -82,11 +82,17 @@ let package = Package(
         // MARK: - Variants
         .target(
             name: "Tensor Dynamic Primitives",
-            dependencies: ["Tensor Primitives Core"]
+            dependencies: [
+                "Tensor Primitives Core",
+                .product(name: "Memory Heap Primitives", package: "swift-memory-heap-primitives"),
+            ]
         ),
         .target(
             name: "Tensor Named Primitives",
-            dependencies: ["Tensor Primitives Core"]
+            dependencies: [
+                "Tensor Primitives Core",
+                .product(name: "Memory Heap Primitives", package: "swift-memory-heap-primitives"),
+            ]
         ),
 
         // MARK: - Umbrella
