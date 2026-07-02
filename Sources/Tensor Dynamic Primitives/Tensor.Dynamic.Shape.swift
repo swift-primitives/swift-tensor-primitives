@@ -15,7 +15,7 @@ extension Tensor.Dynamic {
     /// A rank-erased shape carrying runtime-discoverable per-axis cardinalities.
     ///
     /// The runtime rank is `dims.count`. The element-count product
-    /// `dims.reduce(Cardinal(1), *)` determines the tensor's storage size.
+    /// `dims.reduce(.one, *)` determines the tensor's storage size.
     public struct Shape: Copyable, Sendable, Equatable {
         /// Per-axis cardinalities; the count determines the runtime rank.
         public var dims: [Cardinal]

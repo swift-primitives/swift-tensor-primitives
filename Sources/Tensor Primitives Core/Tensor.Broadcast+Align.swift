@@ -30,7 +30,7 @@ extension Tensor.Broadcast {
     public static func align<let Rank: Int>(
         _ lhs: Tensor.Shape<Rank>,
         _ rhs: Tensor.Shape<Rank>
-    ) throws(Tensor.Broadcast.Error) -> Tensor.Shape<Rank> {
+    ) throws(Error) -> Tensor.Shape<Rank> {
         var dims = InlineArray<Rank, Cardinal>(repeating: .zero)
         // `forEach` is routed through the institute's `Property` accessor
         // on `Swift.Range` (see `Swift.Range+ForEach.swift` in
@@ -39,7 +39,7 @@ extension Tensor.Broadcast {
         // stdlib's inherited `Sequence.forEach`. Preserves `throws(E)` past
         // the closure boundary per `[API-ERR-005]` and climbs the iteration
         // ladder per `[IMPL-033]`.
-        try (0..<Rank).forEach { (axis: Int) throws(Tensor.Broadcast.Error) in
+        try (0..<Rank).forEach { (axis: Int) throws(Error) in
             let a = lhs.dims[axis]
             let b = rhs.dims[axis]
             if a == b {

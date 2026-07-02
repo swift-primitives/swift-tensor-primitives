@@ -25,7 +25,7 @@ extension Tensor {
     /// ## Example
     ///
     /// ```swift
-    /// var dims = InlineArray<3, Cardinal>(repeating: Cardinal(0))
+    /// var dims = InlineArray<3, Cardinal>(repeating: .zero)
     /// dims[0] = Cardinal(2); dims[1] = Cardinal(3); dims[2] = Cardinal(4)
     /// let shape = Tensor.Shape<3>(dims)
     /// // shape (2, 3, 4) — total element count 2·3·4 = 24

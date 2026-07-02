@@ -74,7 +74,7 @@ where
                     let bOffset = j * bRowStride + k * bColStride
                     let aIdx = Index<Element>(_unchecked: Ordinal(UInt(bitPattern: aOffset)))
                     let bIdx = Index<Element>(_unchecked: Ordinal(UInt(bitPattern: bOffset)))
-                    accumulator = accumulator + self._storage[aIdx] * other._storage[bIdx]
+                    accumulator += self._storage[aIdx] * other._storage[bIdx]
                 }
                 storage.append(accumulator)
             }

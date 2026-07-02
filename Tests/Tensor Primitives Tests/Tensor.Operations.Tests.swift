@@ -29,7 +29,7 @@ struct `Tensor Value Operations Tests` {
 ///
 /// Lifted to file scope so each test extension can call it. The name uses
 /// the `read.element(at:_:)` nested-accessor form per [API-NAME-002].
-fileprivate func readElement<Element: Copyable, Layout: Tensor.Layout.`Protocol`>(
+private func readElement<Element: Copyable, Layout: Tensor.Layout.`Protocol`>(
     from tensor: borrowing Tensor.Value<Element, 2, Layout>,
     at i: Int,
     _ j: Int
@@ -42,7 +42,7 @@ fileprivate func readElement<Element: Copyable, Layout: Tensor.Layout.`Protocol`
 }
 
 /// Constructs a rank-2 shape with given rows and columns.
-fileprivate func rank2Shape(_ rows: Int, _ cols: Int) -> Tensor.Shape<2> {
+private func rank2Shape(_ rows: Int, _ cols: Int) -> Tensor.Shape<2> {
     var dims = InlineArray<2, Cardinal>(repeating: .zero)
     dims[0] = Cardinal(UInt(rows))
     dims[1] = Cardinal(UInt(cols))
@@ -241,6 +241,7 @@ extension `Tensor Value Operations Tests`.`Edge Case` {
             switch error {
             case .incompatibleShapes:
                 break
+
             default:
                 #expect(Bool(false), "Wrong error variant")
             }
@@ -278,6 +279,7 @@ extension `Tensor Value Operations Tests`.`Edge Case` {
             switch error {
             case .incompatibleShapes:
                 break
+
             default:
                 #expect(Bool(false), "Wrong error variant")
             }

@@ -22,7 +22,7 @@ where
         var total = Element.zero
         // Single-buffer iteration via Buffer.Linear's Swift.Sequence conformance.
         self._storage.forEach { element in
-            total = total + element
+            total += element
         }
         return total
     }
@@ -38,7 +38,7 @@ where
     public func product() -> Element {
         var total = Element(exactly: 1) ?? Element.zero
         self._storage.forEach { element in
-            total = total * element
+            total *= element
         }
         return total
     }

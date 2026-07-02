@@ -20,7 +20,7 @@ extension Tensor.Shape {
         // the product bottoms out at `Int` via the typed-boundary overload
         // `Int(bitPattern: Cardinal)` ([INFRA-002]).
         (0..<Rank).forEach { axis in
-            total = total * Int(bitPattern: dims[axis])
+            total *= Int(bitPattern: dims[axis])
         }
         return Cardinal(UInt(bitPattern: total))
     }

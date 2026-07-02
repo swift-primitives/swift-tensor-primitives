@@ -35,7 +35,7 @@ extension Tensor.Index.Position {
             // intentionally lacks `Vector × Ordinal → Vector` per [INFRA-200].
             let position = Int(bitPattern: positions[k])
             let stride = Int(bitPattern: strides.values[k])
-            total = total + position * stride
+            total += position * stride
         }
         return Affine.Discrete.Vector(total)
     }

@@ -99,6 +99,7 @@ extension `Tensor Value Tests`.`Edge Case` {
             switch error {
             case .outOfBounds:
                 break
+
             default:
                 #expect(Bool(false), "Wrong error variant")
             }
