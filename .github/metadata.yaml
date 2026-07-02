@@ -1,5 +1,5 @@
 # .github/metadata.yaml
-description: "Tensor types for Swift."
+description: "Move-only, rank-typed n-dimensional tensors with typed-error shape, broadcast, and slice arithmetic for Swift."
 topics:
   - primitives
   - tensor
