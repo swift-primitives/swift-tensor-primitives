@@ -9,8 +9,8 @@
 //
 // ===----------------------------------------------------------------------===//
 
-import Testing
 import Tensor_Primitives_Test_Support
+import Testing
 
 // `Tensor.Shape<Rank>` is generic, so per [SWIFT-TEST-003] we use the
 // parallel-namespace pattern rather than `extension Tensor.Shape { @Suite struct Test {} }`.

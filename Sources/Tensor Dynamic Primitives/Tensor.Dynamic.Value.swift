@@ -9,9 +9,9 @@
 //
 // ===----------------------------------------------------------------------===//
 
-public import Tensor_Primitives_Core
 public import Memory_Heap_Primitives
 public import Storage_Contiguous_Primitives
+public import Tensor_Primitives_Core
 
 extension Tensor.Dynamic {
     /// A rank-erased tensor whose dimensions are data-dependent.

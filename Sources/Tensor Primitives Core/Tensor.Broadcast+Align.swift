@@ -49,7 +49,9 @@ extension Tensor.Broadcast {
             } else if b == .one {
                 dims[axis] = a
             } else {
-                // axis ≥ 0 by construction; Int → Cardinal is total in this range.
+                // WHY: axis ≥ 0 by construction; Int → Cardinal is total in this range.
+                // swift-format-ignore: NeverUseForceTry
+                // swiftlint:disable:next force_try
                 throw .incompatibleShapes(
                     axis: try! Cardinal(axis),
                     lhs: a,

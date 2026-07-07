@@ -17,6 +17,7 @@ extension Tensor.Storage {
     /// when the element buffer must satisfy a hard alignment guarantee for
     /// direct I/O, GPU bridging, or SIMD-aligned access.
     public struct Aligned: Sendable {
+        /// Creates the (zero-size) witness value.
         @inlinable
         public init() {}
     }

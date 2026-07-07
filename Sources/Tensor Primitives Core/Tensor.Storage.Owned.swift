@@ -16,6 +16,7 @@ extension Tensor.Storage {
     /// from `swift-buffer-primitives` — heap-allocated, exclusively-owned,
     /// `~Copyable` storage. This is the default.
     public struct Owned: Sendable {
+        /// Creates the (zero-size) witness value.
         @inlinable
         public init() {}
     }

@@ -15,6 +15,6 @@
 // can write a single `import Tensor_Primitives` and reach the complete L1
 // surface.
 
-@_exported public import Tensor_Primitives_Core
 @_exported public import Tensor_Dynamic_Primitives
 @_exported public import Tensor_Named_Primitives
+@_exported public import Tensor_Primitives_Core

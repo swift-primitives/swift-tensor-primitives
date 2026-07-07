@@ -9,8 +9,8 @@
 //
 // ===----------------------------------------------------------------------===//
 
-import Testing
 import Tensor_Primitives_Test_Support
+import Testing
 
 // `Tensor.Value<Element, Rank, Layout>` is generic, so per [SWIFT-TEST-003] we use
 // the parallel-namespace pattern rather than `extension Tensor.Value { @Suite struct Test {} }`.
@@ -56,10 +56,12 @@ extension `Tensor Value Operations Tests`.Unit {
     func `element-wise addition produces correct sums`() throws(Tensor.Index.Error) {
         let shape = rank2Shape(2, 2)
         let a = try! Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
-            shape: shape, elements: [1, 2, 3, 4]
+            shape: shape,
+            elements: [1, 2, 3, 4]
         )
         let b = try! Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
-            shape: shape, elements: [10, 20, 30, 40]
+            shape: shape,
+            elements: [10, 20, 30, 40]
         )
         let result = try! a.adding(b)
         #expect(try readElement(from: result, at: 0, 0) == 11)
@@ -72,10 +74,12 @@ extension `Tensor Value Operations Tests`.Unit {
     func `element-wise subtraction produces correct differences`() throws(Tensor.Index.Error) {
         let shape = rank2Shape(2, 2)
         let a = try! Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
-            shape: shape, elements: [10, 20, 30, 40]
+            shape: shape,
+            elements: [10, 20, 30, 40]
         )
         let b = try! Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
-            shape: shape, elements: [1, 2, 3, 4]
+            shape: shape,
+            elements: [1, 2, 3, 4]
         )
         let result = try! a.subtracting(b)
         #expect(try readElement(from: result, at: 0, 0) == 9)
@@ -86,7 +90,8 @@ extension `Tensor Value Operations Tests`.Unit {
     func `scalar multiplication scales every element by the scalar`() throws(Tensor.Index.Error) {
         let shape = rank2Shape(2, 2)
         let a = try! Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
-            shape: shape, elements: [1, 2, 3, 4]
+            shape: shape,
+            elements: [1, 2, 3, 4]
         )
         let result = a.scaled(by: 3)
         #expect(try readElement(from: result, at: 0, 0) == 3)
@@ -97,7 +102,8 @@ extension `Tensor Value Operations Tests`.Unit {
     func `sum reduction returns total across all elements`() {
         let shape = rank2Shape(2, 3)
         let a = try! Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
-            shape: shape, elements: [1, 2, 3, 4, 5, 6]
+            shape: shape,
+            elements: [1, 2, 3, 4, 5, 6]
         )
         #expect(a.sum() == 21)
     }
@@ -106,7 +112,8 @@ extension `Tensor Value Operations Tests`.Unit {
     func `product reduction returns multiplied total`() {
         let shape = rank2Shape(2, 2)
         let a = try! Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
-            shape: shape, elements: [1, 2, 3, 4]
+            shape: shape,
+            elements: [1, 2, 3, 4]
         )
         #expect(a.product() == 24)
     }
@@ -115,7 +122,8 @@ extension `Tensor Value Operations Tests`.Unit {
     func `min and max reductions return extremes`() {
         let shape = rank2Shape(2, 2)
         let a = try! Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
-            shape: shape, elements: [4, 1, 9, 3]
+            shape: shape,
+            elements: [4, 1, 9, 3]
         )
         #expect(a.minimum() == 1)
         #expect(a.maximum() == 9)
@@ -125,7 +133,8 @@ extension `Tensor Value Operations Tests`.Unit {
     func `transpose swaps axes for rank-2 tensor`() throws(Tensor.Index.Error) {
         let shape = rank2Shape(2, 3)
         let a = try! Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
-            shape: shape, elements: [1, 2, 3, 4, 5, 6]
+            shape: shape,
+            elements: [1, 2, 3, 4, 5, 6]
         )
         // Original: [[1,2,3],[4,5,6]]
         // Transposed: [[1,4],[2,5],[3,6]]
@@ -142,10 +151,12 @@ extension `Tensor Value Operations Tests`.Unit {
         let aShape = rank2Shape(2, 3)
         let bShape = rank2Shape(3, 2)
         let a = try! Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
-            shape: aShape, elements: [1, 2, 3, 4, 5, 6]
+            shape: aShape,
+            elements: [1, 2, 3, 4, 5, 6]
         )
         let b = try! Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
-            shape: bShape, elements: [7, 8, 9, 10, 11, 12]
+            shape: bShape,
+            elements: [7, 8, 9, 10, 11, 12]
         )
         // [[1,2,3],[4,5,6]] · [[7,8],[9,10],[11,12]]
         // = [[1·7+2·9+3·11, 1·8+2·10+3·12],
@@ -167,7 +178,8 @@ extension `Tensor Value Operations Tests`.Unit {
         dims1[0] = Cardinal(6)
         let shape1 = Tensor.Shape<1>(dims1)
         let a = try! Tensor.Value<Int, 1, Tensor.Layout.Order.Row>(
-            shape: shape1, elements: [1, 2, 3, 4, 5, 6]
+            shape: shape1,
+            elements: [1, 2, 3, 4, 5, 6]
         )
         let b = try! a.reshape(to: rank2Shape(2, 3))
         #expect(b.shape.dims[0] == Cardinal(2))
@@ -186,7 +198,8 @@ extension `Tensor Value Operations Tests`.Unit {
     func `map applies transform to every element`() throws(Tensor.Index.Error) {
         let shape = rank2Shape(2, 2)
         let a = try! Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
-            shape: shape, elements: [1, 2, 3, 4]
+            shape: shape,
+            elements: [1, 2, 3, 4]
         )
         let doubled: Tensor.Value<Int, 2, Tensor.Layout.Order.Row> =
             a.map { (x: Int) -> Int in x * 2 }
@@ -209,9 +222,11 @@ extension `Tensor Value Operations Tests`.Integration {
     @Test
     func `broadcast align with unit axis expands to other operand`() throws(Tensor.Broadcast.Error) {
         var dimsA = InlineArray<2, Cardinal>(repeating: .zero)
-        dimsA[0] = .one; dimsA[1] = Cardinal(3)
+        dimsA[0] = .one
+        dimsA[1] = Cardinal(3)
         var dimsB = InlineArray<2, Cardinal>(repeating: .zero)
-        dimsB[0] = Cardinal(2); dimsB[1] = Cardinal(3)
+        dimsB[0] = Cardinal(2)
+        dimsB[1] = Cardinal(3)
         let a = Tensor.Shape<2>(dimsA)
         let b = Tensor.Shape<2>(dimsB)
         let aligned = try Tensor.Broadcast.align(a, b)
@@ -226,12 +241,14 @@ extension `Tensor Value Operations Tests`.`Edge Case` {
     @Test
     func `matmul with incompatible inner dim throws incompatibleShapes`() {
         let aShape = rank2Shape(2, 3)
-        let bShape = rank2Shape(4, 2) // inner dim 3 ≠ 4
+        let bShape = rank2Shape(4, 2)  // inner dim 3 ≠ 4
         let a = try! Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
-            shape: aShape, elements: [1, 2, 3, 4, 5, 6]
+            shape: aShape,
+            elements: [1, 2, 3, 4, 5, 6]
         )
         let b = try! Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
-            shape: bShape, elements: [1, 2, 3, 4, 5, 6, 7, 8]
+            shape: bShape,
+            elements: [1, 2, 3, 4, 5, 6, 7, 8]
         )
 
         do throws(Tensor.Broadcast.Error) {
@@ -252,7 +269,8 @@ extension `Tensor Value Operations Tests`.`Edge Case` {
     func `reshape with mismatched product throws productNotPreserved`() {
         let shape = rank2Shape(2, 3)
         let a = try! Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
-            shape: shape, elements: [1, 2, 3, 4, 5, 6]
+            shape: shape,
+            elements: [1, 2, 3, 4, 5, 6]
         )
         let wrong = rank2Shape(2, 4)
         do throws(Tensor.Reshape.Error) {
@@ -266,9 +284,11 @@ extension `Tensor Value Operations Tests`.`Edge Case` {
     @Test
     func `broadcast align on incompatible non-unit dims throws incompatibleShapes`() {
         var dimsA = InlineArray<2, Cardinal>(repeating: .zero)
-        dimsA[0] = Cardinal(2); dimsA[1] = Cardinal(3)
+        dimsA[0] = Cardinal(2)
+        dimsA[1] = Cardinal(3)
         var dimsB = InlineArray<2, Cardinal>(repeating: .zero)
-        dimsB[0] = Cardinal(2); dimsB[1] = Cardinal(5)
+        dimsB[0] = Cardinal(2)
+        dimsB[1] = Cardinal(5)
         let a = Tensor.Shape<2>(dimsA)
         let b = Tensor.Shape<2>(dimsB)
 

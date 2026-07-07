@@ -57,6 +57,10 @@ extension Tensor.Index.Position {
             let position = positions[k]
             let bound = shape.dims[k]
             if position >= bound {
+                // WHY: k ranges over 0..<Rank, always non-negative; Int → Cardinal is
+                // total in this range.
+                // swift-format-ignore: NeverUseForceTry
+                // swiftlint:disable:next force_try
                 throw .outOfBounds(
                     axis: try! Cardinal(k),
                     position: position,

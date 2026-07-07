@@ -9,8 +9,8 @@
 //
 // ===----------------------------------------------------------------------===//
 
-import Testing
 import Tensor_Primitives_Test_Support
+import Testing
 
 // `Tensor.Value<Element, Rank, Layout>` is generic, so per [SWIFT-TEST-003] we use
 // the parallel-namespace pattern rather than `extension Tensor.Value { @Suite struct Test {} }`.
@@ -27,7 +27,8 @@ extension `Tensor Value Tests`.Unit {
     @Test
     func `constructs row-major rank-2 tensor from elements`() throws(Tensor.Shape<2>.Error) {
         var dims = InlineArray<2, Cardinal>(repeating: .zero)
-        dims[0] = Cardinal(2); dims[1] = Cardinal(3)
+        dims[0] = Cardinal(2)
+        dims[1] = Cardinal(3)
         let shape = Tensor.Shape<2>(dims)
         let tensor = try Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
             shape: shape,
@@ -40,7 +41,8 @@ extension `Tensor Value Tests`.Unit {
     @Test
     func `subscript reads correct elements at row-major positions`() throws(Tensor.Index.Error) {
         var dims = InlineArray<2, Cardinal>(repeating: .zero)
-        dims[0] = Cardinal(2); dims[1] = Cardinal(3)
+        dims[0] = Cardinal(2)
+        dims[1] = Cardinal(3)
         let shape = Tensor.Shape<2>(dims)
         let tensor = try! Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
             shape: shape,
@@ -63,13 +65,14 @@ extension `Tensor Value Tests`.`Edge Case` {
     @Test
     func `mismatched element count throws elementCountMismatch`() {
         var dims = InlineArray<2, Cardinal>(repeating: .zero)
-        dims[0] = Cardinal(2); dims[1] = Cardinal(3)
+        dims[0] = Cardinal(2)
+        dims[1] = Cardinal(3)
         let shape = Tensor.Shape<2>(dims)
 
         do throws(Tensor.Shape<2>.Error) {
             _ = try Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
                 shape: shape,
-                elements: [1, 2, 3] // 3 elements, shape needs 6
+                elements: [1, 2, 3]  // 3 elements, shape needs 6
             )
             #expect(Bool(false), "Expected throw")
         } catch let error {
@@ -80,7 +83,8 @@ extension `Tensor Value Tests`.`Edge Case` {
     @Test
     func `out-of-bounds position throws outOfBounds`() throws(Tensor.Shape<2>.Error) {
         var dims = InlineArray<2, Cardinal>(repeating: .zero)
-        dims[0] = Cardinal(2); dims[1] = Cardinal(3)
+        dims[0] = Cardinal(2)
+        dims[1] = Cardinal(3)
         let shape = Tensor.Shape<2>(dims)
         let tensor = try Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
             shape: shape,
@@ -88,7 +92,7 @@ extension `Tensor Value Tests`.`Edge Case` {
         )
 
         var positions = InlineArray<2, Ordinal>(repeating: Ordinal(0))
-        positions[0] = Ordinal(5) // out of bounds (only 0..<2)
+        positions[0] = Ordinal(5)  // out of bounds (only 0..<2)
         positions[1] = Ordinal(0)
         let pos = Tensor.Index.Position<2>(positions)
 

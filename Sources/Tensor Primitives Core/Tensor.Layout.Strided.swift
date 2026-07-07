@@ -18,15 +18,18 @@ extension Tensor.Layout {
     /// access (raw buffer reinterpretation, BLAS calls) must check at the
     /// operation site or convert via copy.
     public struct Strided: _TensorLayoutProtocol {
+        /// Creates the (zero-size) witness value.
         @inlinable
         public init() {}
     }
 }
 
 extension Tensor.Layout.Strided {
+    /// A textual tag for diagnostics.
     @inlinable
     public static var tag: String { "Strided" }
 
+    /// Whether this layout guarantees contiguous storage.
     @inlinable
     public static var isContiguous: Bool { false }
 }

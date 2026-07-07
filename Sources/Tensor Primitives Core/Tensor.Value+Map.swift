@@ -15,6 +15,7 @@ extension Tensor.Value where Element: Copyable {
     ///
     /// - Parameter transform: A per-element function.
     /// - Returns: A new tensor with `transform` applied to every element.
+    /// - Throws: Whatever `transform` throws, propagated from the first failing element.
     @inlinable
     public func map<NewElement: Copyable, E: Swift.Error>(
         _ transform: (Element) throws(E) -> NewElement

@@ -16,15 +16,18 @@ extension Tensor.Layout.Order {
     /// shape `(d₀, d₁, d₂)` the strides are `(1, d₀, d₀ · d₁)`. This is the
     /// default of Fortran and Eigen.
     public struct Column: _TensorLayoutProtocol {
+        /// Creates the (zero-size) witness value.
         @inlinable
         public init() {}
     }
 }
 
 extension Tensor.Layout.Order.Column {
+    /// A textual tag for diagnostics.
     @inlinable
     public static var tag: String { "Column" }
 
+    /// Whether this layout guarantees contiguous storage.
     @inlinable
     public static var isContiguous: Bool { true }
 }
