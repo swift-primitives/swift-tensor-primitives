@@ -22,8 +22,9 @@ extension Tensor.Slice {
         /// Slice a contiguous range `[start, end)` along the axis.
         case range(start: Ordinal, end: Ordinal)
 
-        /// Take a single position along the axis. The axis is dropped from
-        /// the resulting view.
+        /// Take a single position along the axis.
+        ///
+        /// The axis is dropped from the resulting view.
         case single(Ordinal)
 
         /// Insert a new axis of size 1 at this position (NumPy `np.newaxis`).

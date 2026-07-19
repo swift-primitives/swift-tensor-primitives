@@ -24,6 +24,8 @@ extension Tensor.Broadcast {
     /// - Parameters:
     ///   - linearIndex: A row-major linear index in `0..<shape.count`.
     ///   - shape: The shape `linearIndex` is drawn from.
+    /// - Returns: The per-axis position corresponding to `linearIndex` in
+    ///   row-major order.
     /// - Precondition: `0 <= linearIndex < Int(bitPattern: shape.count)`.
     @inlinable
     public static func position<let Rank: Int>(
