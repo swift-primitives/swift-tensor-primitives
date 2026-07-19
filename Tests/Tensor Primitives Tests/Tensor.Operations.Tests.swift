@@ -49,6 +49,30 @@ private func rank2Shape(_ rows: Int, _ cols: Int) -> Tensor.Shape<2> {
     return Tensor.Shape<2>(dims)
 }
 
+/// Reads element at coordinates (i, j, k) from a rank-3 tensor.
+private func readElement3<Element: Copyable, Layout: Tensor.Layout.`Protocol`>(
+    from tensor: borrowing Tensor.Value<Element, 3, Layout>,
+    at i: Int,
+    _ j: Int,
+    _ k: Int
+) throws(Tensor.Index.Error) -> Element where Element: Copyable {
+    var positions = InlineArray<3, Ordinal>(repeating: Ordinal(0))
+    positions[0] = Ordinal(UInt(i))
+    positions[1] = Ordinal(UInt(j))
+    positions[2] = Ordinal(UInt(k))
+    let pos = Tensor.Index.Position<3>(positions)
+    return try tensor.element(at: pos)
+}
+
+/// Constructs a rank-3 shape with the given per-axis cardinalities.
+private func rank3Shape(_ d0: Int, _ d1: Int, _ d2: Int) -> Tensor.Shape<3> {
+    var dims = InlineArray<3, Cardinal>(repeating: .zero)
+    dims[0] = Cardinal(UInt(d0))
+    dims[1] = Cardinal(UInt(d1))
+    dims[2] = Cardinal(UInt(d2))
+    return Tensor.Shape<3>(dims)
+}
+
 // MARK: - Unit Tests
 
 extension `Tensor Value Operations Tests`.Unit {
@@ -205,6 +229,133 @@ extension `Tensor Value Operations Tests`.Unit {
             a.map { (x: Int) -> Int in x * 2 }
         #expect(try readElement(from: doubled, at: 0, 0) == 2)
         #expect(try readElement(from: doubled, at: 1, 1) == 8)
+    }
+
+    // MARK: - F-001 regression: broadcast arithmetic must not read past the
+    // smaller operand's buffer at the shared linear offset. Each case below
+    // has an aligned output element count strictly greater than at least one
+    // operand's own element count, so a naive shared-linear-offset kernel
+    // either indexes out of bounds (traps) or, when it doesn't trap, mixes
+    // up the wrong elements — it must instead repeat the stretched axis via
+    // zero-stride reads.
+
+    @Test
+    func `broadcast addition of (1,3) and (2,3) repeats the length-1 row`() throws(Tensor.Index.Error) {
+        var dimsA = InlineArray<2, Cardinal>(repeating: .zero)
+        dimsA[0] = .one
+        dimsA[1] = Cardinal(3)
+        let a = try! Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
+            shape: Tensor.Shape<2>(dimsA),
+            elements: [1, 2, 3]
+        )
+        let b = try! Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
+            shape: rank2Shape(2, 3),
+            elements: [10, 20, 30, 40, 50, 60]
+        )
+        let result = try! a.adding(b)
+        #expect(result.shape.dims[0] == Cardinal(2))
+        #expect(result.shape.dims[1] == Cardinal(3))
+        #expect(try readElement(from: result, at: 0, 0) == 11)
+        #expect(try readElement(from: result, at: 0, 1) == 22)
+        #expect(try readElement(from: result, at: 0, 2) == 33)
+        #expect(try readElement(from: result, at: 1, 0) == 41)
+        #expect(try readElement(from: result, at: 1, 1) == 52)
+        #expect(try readElement(from: result, at: 1, 2) == 63)
+    }
+
+    @Test
+    func `broadcast addition of (2,1) and (1,2) produces the outer sum`() throws(Tensor.Index.Error) {
+        var dimsA = InlineArray<2, Cardinal>(repeating: .zero)
+        dimsA[0] = Cardinal(2)
+        dimsA[1] = .one
+        let a = try! Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
+            shape: Tensor.Shape<2>(dimsA),
+            elements: [1, 2]
+        )
+        var dimsB = InlineArray<2, Cardinal>(repeating: .zero)
+        dimsB[0] = .one
+        dimsB[1] = Cardinal(2)
+        let b = try! Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
+            shape: Tensor.Shape<2>(dimsB),
+            elements: [10, 20]
+        )
+        let result = try! a.adding(b)
+        #expect(result.shape.dims[0] == Cardinal(2))
+        #expect(result.shape.dims[1] == Cardinal(2))
+        #expect(try readElement(from: result, at: 0, 0) == 11)
+        #expect(try readElement(from: result, at: 0, 1) == 21)
+        #expect(try readElement(from: result, at: 1, 0) == 12)
+        #expect(try readElement(from: result, at: 1, 1) == 22)
+    }
+
+    @Test
+    func `broadcast addition of rank-3 (2,1,3) and (1,2,3) broadcasts two distinct axes`() throws(Tensor.Index.Error) {
+        let a = try! Tensor.Value<Int, 3, Tensor.Layout.Order.Row>(
+            shape: rank3Shape(2, 1, 3),
+            elements: [1, 2, 3, 4, 5, 6]
+        )
+        let b = try! Tensor.Value<Int, 3, Tensor.Layout.Order.Row>(
+            shape: rank3Shape(1, 2, 3),
+            elements: [10, 20, 30, 40, 50, 60]
+        )
+        let result = try! a.adding(b)
+        #expect(result.shape.dims[0] == Cardinal(2))
+        #expect(result.shape.dims[1] == Cardinal(2))
+        #expect(result.shape.dims[2] == Cardinal(3))
+        #expect(try readElement3(from: result, at: 0, 0, 0) == 11)
+        #expect(try readElement3(from: result, at: 0, 0, 2) == 33)
+        #expect(try readElement3(from: result, at: 0, 1, 0) == 41)
+        #expect(try readElement3(from: result, at: 0, 1, 2) == 63)
+        #expect(try readElement3(from: result, at: 1, 0, 0) == 14)
+        #expect(try readElement3(from: result, at: 1, 0, 2) == 36)
+        #expect(try readElement3(from: result, at: 1, 1, 0) == 44)
+        #expect(try readElement3(from: result, at: 1, 1, 2) == 66)
+    }
+
+    @Test
+    func `broadcast subtraction of (2,1) and (1,2) produces the outer difference`() throws(Tensor.Index.Error) {
+        var dimsA = InlineArray<2, Cardinal>(repeating: .zero)
+        dimsA[0] = Cardinal(2)
+        dimsA[1] = .one
+        let a = try! Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
+            shape: Tensor.Shape<2>(dimsA),
+            elements: [10, 20]
+        )
+        var dimsB = InlineArray<2, Cardinal>(repeating: .zero)
+        dimsB[0] = .one
+        dimsB[1] = Cardinal(2)
+        let b = try! Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
+            shape: Tensor.Shape<2>(dimsB),
+            elements: [1, 2]
+        )
+        let result = try! a.subtracting(b)
+        #expect(try readElement(from: result, at: 0, 0) == 9)
+        #expect(try readElement(from: result, at: 0, 1) == 8)
+        #expect(try readElement(from: result, at: 1, 0) == 19)
+        #expect(try readElement(from: result, at: 1, 1) == 18)
+    }
+
+    @Test
+    func `broadcast element-wise multiplication of (2,1) and (1,2) produces the outer product`() throws(Tensor.Index.Error) {
+        var dimsA = InlineArray<2, Cardinal>(repeating: .zero)
+        dimsA[0] = Cardinal(2)
+        dimsA[1] = .one
+        let a = try! Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
+            shape: Tensor.Shape<2>(dimsA),
+            elements: [2, 3]
+        )
+        var dimsB = InlineArray<2, Cardinal>(repeating: .zero)
+        dimsB[0] = .one
+        dimsB[1] = Cardinal(2)
+        let b = try! Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
+            shape: Tensor.Shape<2>(dimsB),
+            elements: [5, 7]
+        )
+        let result = try! a.multiplying(elementWise: b)
+        #expect(try readElement(from: result, at: 0, 0) == 10)
+        #expect(try readElement(from: result, at: 0, 1) == 14)
+        #expect(try readElement(from: result, at: 1, 0) == 15)
+        #expect(try readElement(from: result, at: 1, 1) == 21)
     }
 }
 
