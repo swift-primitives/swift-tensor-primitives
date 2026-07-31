@@ -9,11 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-extension Tensor {
-    /// Namespace for reshape operations and their errors.
-    public enum Reshape {}
-}
-
 extension Tensor.Reshape {
     /// Reshape failure cases.
     public enum Error: Swift.Error, Sendable, Equatable {

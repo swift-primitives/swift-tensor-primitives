@@ -38,7 +38,7 @@ where
         let lhsStrides = Tensor.Broadcast.strides(of: self._shape, aligned: aligned)
         let rhsStrides = Tensor.Broadcast.strides(of: other._shape, aligned: aligned)
         let n = Int(bitPattern: count)
-        for i in 0..<n {
+        (0..<n).forEach { i in
             let position = Tensor.Broadcast.position(ofLinearIndex: i, in: aligned)
             let lhsOffset = position.linearize(strides: lhsStrides)
             let rhsOffset = position.linearize(strides: rhsStrides)
@@ -67,7 +67,7 @@ where
         let lhsStrides = Tensor.Broadcast.strides(of: self._shape, aligned: aligned)
         let rhsStrides = Tensor.Broadcast.strides(of: other._shape, aligned: aligned)
         let n = Int(bitPattern: count)
-        for i in 0..<n {
+        (0..<n).forEach { i in
             let position = Tensor.Broadcast.position(ofLinearIndex: i, in: aligned)
             let lhsOffset = position.linearize(strides: lhsStrides)
             let rhsOffset = position.linearize(strides: rhsStrides)
@@ -102,7 +102,7 @@ where
         let lhsStrides = Tensor.Broadcast.strides(of: self._shape, aligned: aligned)
         let rhsStrides = Tensor.Broadcast.strides(of: other._shape, aligned: aligned)
         let n = Int(bitPattern: count)
-        for i in 0..<n {
+        (0..<n).forEach { i in
             let position = Tensor.Broadcast.position(ofLinearIndex: i, in: aligned)
             let lhsOffset = position.linearize(strides: lhsStrides)
             let rhsOffset = position.linearize(strides: rhsStrides)
