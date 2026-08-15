@@ -39,12 +39,12 @@ extension `Tensor Value Tests`.Unit {
     }
 
     @Test
-    func `subscript reads correct elements at row-major positions`() throws(Tensor.Index.Error) {
+    func `subscript reads correct elements at row-major positions`() throws {
         var dims = InlineArray<2, Cardinal>(repeating: .zero)
         dims[0] = Cardinal(2)
         dims[1] = Cardinal(3)
         let shape = Tensor.Shape<2>(dims)
-        let tensor = try! Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
+        let tensor = try Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
             shape: shape,
             elements: [10, 20, 30, 40, 50, 60]
         )

@@ -77,17 +77,17 @@ private func rank3Shape(_ d0: Int, _ d1: Int, _ d2: Int) -> Tensor.Shape<3> {
 
 extension `Tensor Value Operations Tests`.Unit {
     @Test
-    func `element-wise addition produces correct sums`() throws(Tensor.Index.Error) {
+    func `element-wise addition produces correct sums`() throws {
         let shape = rank2Shape(2, 2)
-        let a = try! Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
+        let a = try Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
             shape: shape,
             elements: [1, 2, 3, 4]
         )
-        let b = try! Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
+        let b = try Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
             shape: shape,
             elements: [10, 20, 30, 40]
         )
-        let result = try! a.adding(b)
+        let result = try a.adding(b)
         #expect(try readElement(from: result, at: 0, 0) == 11)
         #expect(try readElement(from: result, at: 0, 1) == 22)
         #expect(try readElement(from: result, at: 1, 0) == 33)
@@ -95,25 +95,25 @@ extension `Tensor Value Operations Tests`.Unit {
     }
 
     @Test
-    func `element-wise subtraction produces correct differences`() throws(Tensor.Index.Error) {
+    func `element-wise subtraction produces correct differences`() throws {
         let shape = rank2Shape(2, 2)
-        let a = try! Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
+        let a = try Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
             shape: shape,
             elements: [10, 20, 30, 40]
         )
-        let b = try! Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
+        let b = try Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
             shape: shape,
             elements: [1, 2, 3, 4]
         )
-        let result = try! a.subtracting(b)
+        let result = try a.subtracting(b)
         #expect(try readElement(from: result, at: 0, 0) == 9)
         #expect(try readElement(from: result, at: 1, 1) == 36)
     }
 
     @Test
-    func `scalar multiplication scales every element by the scalar`() throws(Tensor.Index.Error) {
+    func `scalar multiplication scales every element by the scalar`() throws {
         let shape = rank2Shape(2, 2)
-        let a = try! Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
+        let a = try Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
             shape: shape,
             elements: [1, 2, 3, 4]
         )
@@ -123,9 +123,9 @@ extension `Tensor Value Operations Tests`.Unit {
     }
 
     @Test
-    func `sum reduction returns total across all elements`() {
+    func `sum reduction returns total across all elements`() throws {
         let shape = rank2Shape(2, 3)
-        let a = try! Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
+        let a = try Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
             shape: shape,
             elements: [1, 2, 3, 4, 5, 6]
         )
@@ -133,9 +133,9 @@ extension `Tensor Value Operations Tests`.Unit {
     }
 
     @Test
-    func `product reduction returns multiplied total`() {
+    func `product reduction returns multiplied total`() throws {
         let shape = rank2Shape(2, 2)
-        let a = try! Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
+        let a = try Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
             shape: shape,
             elements: [1, 2, 3, 4]
         )
@@ -143,9 +143,9 @@ extension `Tensor Value Operations Tests`.Unit {
     }
 
     @Test
-    func `min and max reductions return extremes`() {
+    func `min and max reductions return extremes`() throws {
         let shape = rank2Shape(2, 2)
-        let a = try! Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
+        let a = try Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
             shape: shape,
             elements: [4, 1, 9, 3]
         )
@@ -154,9 +154,9 @@ extension `Tensor Value Operations Tests`.Unit {
     }
 
     @Test
-    func `transpose swaps axes for rank-2 tensor`() throws(Tensor.Index.Error) {
+    func `transpose swaps axes for rank-2 tensor`() throws {
         let shape = rank2Shape(2, 3)
-        let a = try! Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
+        let a = try Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
             shape: shape,
             elements: [1, 2, 3, 4, 5, 6]
         )
@@ -171,14 +171,14 @@ extension `Tensor Value Operations Tests`.Unit {
     }
 
     @Test
-    func `matmul of 2x3 by 3x2 produces 2x2 result`() throws(Tensor.Index.Error) {
+    func `matmul of 2x3 by 3x2 produces 2x2 result`() throws {
         let aShape = rank2Shape(2, 3)
         let bShape = rank2Shape(3, 2)
-        let a = try! Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
+        let a = try Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
             shape: aShape,
             elements: [1, 2, 3, 4, 5, 6]
         )
-        let b = try! Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
+        let b = try Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
             shape: bShape,
             elements: [7, 8, 9, 10, 11, 12]
         )
@@ -186,7 +186,7 @@ extension `Tensor Value Operations Tests`.Unit {
         // = [[1·7+2·9+3·11, 1·8+2·10+3·12],
         //    [4·7+5·9+6·11, 4·8+5·10+6·12]]
         // = [[58, 64], [139, 154]]
-        let c = try! a.multiplied(by: b)
+        let c = try a.multiplied(by: b)
         #expect(c.shape.dims[0] == Cardinal(2))
         #expect(c.shape.dims[1] == Cardinal(2))
         #expect(try readElement(from: c, at: 0, 0) == 58)
@@ -196,22 +196,22 @@ extension `Tensor Value Operations Tests`.Unit {
     }
 
     @Test
-    func `reshape from rank-1 to rank-2 preserves elements`() throws(Tensor.Index.Error) {
+    func `reshape from rank-1 to rank-2 preserves elements`() throws {
         // Start with a rank-1 tensor of 6, reshape to (2,3) then (3,2).
         var dims1 = InlineArray<1, Cardinal>(repeating: .zero)
         dims1[0] = Cardinal(6)
         let shape1 = Tensor.Shape<1>(dims1)
-        let a = try! Tensor.Value<Int, 1, Tensor.Layout.Order.Row>(
+        let a = try Tensor.Value<Int, 1, Tensor.Layout.Order.Row>(
             shape: shape1,
             elements: [1, 2, 3, 4, 5, 6]
         )
-        let b = try! a.reshape(to: rank2Shape(2, 3))
+        let b = try a.reshape(to: rank2Shape(2, 3))
         #expect(b.shape.dims[0] == Cardinal(2))
         #expect(b.shape.dims[1] == Cardinal(3))
         #expect(try readElement(from: b, at: 0, 0) == 1)
         #expect(try readElement(from: b, at: 1, 2) == 6)
 
-        let c = try! b.reshape(to: rank2Shape(3, 2))
+        let c = try b.reshape(to: rank2Shape(3, 2))
         #expect(c.shape.dims[0] == Cardinal(3))
         #expect(c.shape.dims[1] == Cardinal(2))
         #expect(try readElement(from: c, at: 0, 0) == 1)
@@ -219,9 +219,9 @@ extension `Tensor Value Operations Tests`.Unit {
     }
 
     @Test
-    func `map applies transform to every element`() throws(Tensor.Index.Error) {
+    func `map applies transform to every element`() throws {
         let shape = rank2Shape(2, 2)
-        let a = try! Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
+        let a = try Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
             shape: shape,
             elements: [1, 2, 3, 4]
         )
@@ -240,19 +240,19 @@ extension `Tensor Value Operations Tests`.Unit {
     // zero-stride reads.
 
     @Test
-    func `broadcast addition of (1,3) and (2,3) repeats the length-1 row`() throws(Tensor.Index.Error) {
+    func `broadcast addition of (1,3) and (2,3) repeats the length-1 row`() throws {
         var dimsA = InlineArray<2, Cardinal>(repeating: .zero)
         dimsA[0] = .one
         dimsA[1] = Cardinal(3)
-        let a = try! Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
+        let a = try Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
             shape: Tensor.Shape<2>(dimsA),
             elements: [1, 2, 3]
         )
-        let b = try! Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
+        let b = try Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
             shape: rank2Shape(2, 3),
             elements: [10, 20, 30, 40, 50, 60]
         )
-        let result = try! a.adding(b)
+        let result = try a.adding(b)
         #expect(result.shape.dims[0] == Cardinal(2))
         #expect(result.shape.dims[1] == Cardinal(3))
         #expect(try readElement(from: result, at: 0, 0) == 11)
@@ -264,22 +264,22 @@ extension `Tensor Value Operations Tests`.Unit {
     }
 
     @Test
-    func `broadcast addition of (2,1) and (1,2) produces the outer sum`() throws(Tensor.Index.Error) {
+    func `broadcast addition of (2,1) and (1,2) produces the outer sum`() throws {
         var dimsA = InlineArray<2, Cardinal>(repeating: .zero)
         dimsA[0] = Cardinal(2)
         dimsA[1] = .one
-        let a = try! Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
+        let a = try Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
             shape: Tensor.Shape<2>(dimsA),
             elements: [1, 2]
         )
         var dimsB = InlineArray<2, Cardinal>(repeating: .zero)
         dimsB[0] = .one
         dimsB[1] = Cardinal(2)
-        let b = try! Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
+        let b = try Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
             shape: Tensor.Shape<2>(dimsB),
             elements: [10, 20]
         )
-        let result = try! a.adding(b)
+        let result = try a.adding(b)
         #expect(result.shape.dims[0] == Cardinal(2))
         #expect(result.shape.dims[1] == Cardinal(2))
         #expect(try readElement(from: result, at: 0, 0) == 11)
@@ -289,16 +289,16 @@ extension `Tensor Value Operations Tests`.Unit {
     }
 
     @Test
-    func `broadcast addition of rank-3 (2,1,3) and (1,2,3) broadcasts two distinct axes`() throws(Tensor.Index.Error) {
-        let a = try! Tensor.Value<Int, 3, Tensor.Layout.Order.Row>(
+    func `broadcast addition of rank-3 (2,1,3) and (1,2,3) broadcasts two distinct axes`() throws {
+        let a = try Tensor.Value<Int, 3, Tensor.Layout.Order.Row>(
             shape: rank3Shape(2, 1, 3),
             elements: [1, 2, 3, 4, 5, 6]
         )
-        let b = try! Tensor.Value<Int, 3, Tensor.Layout.Order.Row>(
+        let b = try Tensor.Value<Int, 3, Tensor.Layout.Order.Row>(
             shape: rank3Shape(1, 2, 3),
             elements: [10, 20, 30, 40, 50, 60]
         )
-        let result = try! a.adding(b)
+        let result = try a.adding(b)
         #expect(result.shape.dims[0] == Cardinal(2))
         #expect(result.shape.dims[1] == Cardinal(2))
         #expect(result.shape.dims[2] == Cardinal(3))
@@ -313,22 +313,22 @@ extension `Tensor Value Operations Tests`.Unit {
     }
 
     @Test
-    func `broadcast subtraction of (2,1) and (1,2) produces the outer difference`() throws(Tensor.Index.Error) {
+    func `broadcast subtraction of (2,1) and (1,2) produces the outer difference`() throws {
         var dimsA = InlineArray<2, Cardinal>(repeating: .zero)
         dimsA[0] = Cardinal(2)
         dimsA[1] = .one
-        let a = try! Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
+        let a = try Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
             shape: Tensor.Shape<2>(dimsA),
             elements: [10, 20]
         )
         var dimsB = InlineArray<2, Cardinal>(repeating: .zero)
         dimsB[0] = .one
         dimsB[1] = Cardinal(2)
-        let b = try! Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
+        let b = try Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
             shape: Tensor.Shape<2>(dimsB),
             elements: [1, 2]
         )
-        let result = try! a.subtracting(b)
+        let result = try a.subtracting(b)
         #expect(try readElement(from: result, at: 0, 0) == 9)
         #expect(try readElement(from: result, at: 0, 1) == 8)
         #expect(try readElement(from: result, at: 1, 0) == 19)
@@ -336,22 +336,24 @@ extension `Tensor Value Operations Tests`.Unit {
     }
 
     @Test
-    func `broadcast element-wise multiplication of (2,1) and (1,2) produces the outer product`() throws(Tensor.Index.Error) {
+    func `broadcast element-wise multiplication of (2,1) and (1,2) produces the outer product`()
+        throws
+    {
         var dimsA = InlineArray<2, Cardinal>(repeating: .zero)
         dimsA[0] = Cardinal(2)
         dimsA[1] = .one
-        let a = try! Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
+        let a = try Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
             shape: Tensor.Shape<2>(dimsA),
             elements: [2, 3]
         )
         var dimsB = InlineArray<2, Cardinal>(repeating: .zero)
         dimsB[0] = .one
         dimsB[1] = Cardinal(2)
-        let b = try! Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
+        let b = try Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
             shape: Tensor.Shape<2>(dimsB),
             elements: [5, 7]
         )
-        let result = try! a.multiplying(elementWise: b)
+        let result = try a.multiplying(elementWise: b)
         #expect(try readElement(from: result, at: 0, 0) == 10)
         #expect(try readElement(from: result, at: 0, 1) == 14)
         #expect(try readElement(from: result, at: 1, 0) == 15)
@@ -371,7 +373,8 @@ extension `Tensor Value Operations Tests`.Integration {
     }
 
     @Test
-    func `broadcast align with unit axis expands to other operand`() throws(Tensor.Broadcast.Error) {
+    func `broadcast align with unit axis expands to other operand`() throws(Tensor.Broadcast.Error)
+    {
         var dimsA = InlineArray<2, Cardinal>(repeating: .zero)
         dimsA[0] = .one
         dimsA[1] = Cardinal(3)
@@ -390,14 +393,14 @@ extension `Tensor Value Operations Tests`.Integration {
 
 extension `Tensor Value Operations Tests`.`Edge Case` {
     @Test
-    func `matmul with incompatible inner dim throws incompatibleShapes`() {
+    func `matmul with incompatible inner dim throws incompatibleShapes`() throws {
         let aShape = rank2Shape(2, 3)
         let bShape = rank2Shape(4, 2)  // inner dim 3 ≠ 4
-        let a = try! Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
+        let a = try Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
             shape: aShape,
             elements: [1, 2, 3, 4, 5, 6]
         )
-        let b = try! Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
+        let b = try Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
             shape: bShape,
             elements: [1, 2, 3, 4, 5, 6, 7, 8]
         )
@@ -417,9 +420,9 @@ extension `Tensor Value Operations Tests`.`Edge Case` {
     }
 
     @Test
-    func `reshape with mismatched product throws productNotPreserved`() {
+    func `reshape with mismatched product throws productNotPreserved`() throws {
         let shape = rank2Shape(2, 3)
-        let a = try! Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
+        let a = try Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
             shape: shape,
             elements: [1, 2, 3, 4, 5, 6]
         )

@@ -29,13 +29,18 @@ extension Tensor.Dynamic {
 
         /// Heap-backed element storage.
         @usableFromInline
-        package var _storage: Buffer<Storage_Primitive.Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Element>>.Linear
+        package var _storage:
+            Buffer<Storage_Primitive.Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Element>>
+                .Linear
 
         /// Canonical initializer per `[API-IMPL-008]`.
         @inlinable
         public init(
             shape: Tensor.Dynamic.Shape,
-            storage: consuming Buffer<Storage_Primitive.Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Element>>.Linear
+            storage:
+                consuming Buffer<
+                    Storage_Primitive.Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Element>
+                >.Linear
         ) {
             self._shape = shape
             self._storage = storage

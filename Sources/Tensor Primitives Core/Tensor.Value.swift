@@ -26,7 +26,9 @@ extension Tensor {
     /// Per `[API-IMPL-008]`, the type body holds only stored properties and
     /// the canonical initializer; all methods live in `+`-suffixed extension
     /// files.
-    public struct `Value`<Element: ~Copyable, let Rank: Int, Layout: Tensor.Layout.`Protocol`>: ~Copyable {
+    public struct `Value`<Element: ~Copyable, let Rank: Int, Layout: Tensor.Layout.`Protocol`>:
+        ~Copyable
+    {
         /// Runtime per-axis cardinalities.
         @usableFromInline
         package var _shape: Tensor.Shape<Rank>
@@ -37,7 +39,9 @@ extension Tensor {
 
         /// Heap-backed element storage.
         @usableFromInline
-        package var _storage: Buffer<Storage_Primitive.Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Element>>.Linear
+        package var _storage:
+            Buffer<Storage_Primitive.Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Element>>
+                .Linear
 
         /// Canonical initializer per `[API-IMPL-008]`.
         ///
@@ -49,7 +53,10 @@ extension Tensor {
         public init(
             shape: Tensor.Shape<Rank>,
             strides: Tensor.Strides<Rank>,
-            storage: consuming Buffer<Storage_Primitive.Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Element>>.Linear
+            storage:
+                consuming Buffer<
+                    Storage_Primitive.Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Element>
+                >.Linear
         ) {
             self._shape = shape
             self._strides = strides

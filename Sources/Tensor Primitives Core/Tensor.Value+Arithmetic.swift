@@ -26,7 +26,9 @@ where
     ) throws(Tensor.Broadcast.Error) -> Tensor.Value<Element, Rank, Tensor.Layout.Order.Row> {
         let aligned = try Tensor.Broadcast.align(self._shape, other._shape)
         let count = aligned.count
-        var newStorage = Buffer<Storage_Primitive.Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Element>>.Linear(
+        var newStorage = Buffer<
+            Storage_Primitive.Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Element>
+        >.Linear(
             minimumCapacity: Index<Element>.Count(count)
         )
         // Stride-aware broadcast traversal. Each operand reads through its
@@ -42,8 +44,12 @@ where
             let position = Tensor.Broadcast.position(ofLinearIndex: i, in: aligned)
             let lhsOffset = position.linearize(strides: lhsStrides)
             let rhsOffset = position.linearize(strides: rhsStrides)
-            let lhsIdx = Index<Element>(_unchecked: Ordinal(UInt(bitPattern: Int(bitPattern: lhsOffset))))
-            let rhsIdx = Index<Element>(_unchecked: Ordinal(UInt(bitPattern: Int(bitPattern: rhsOffset))))
+            let lhsIdx = Index<Element>(
+                _unchecked: Ordinal(UInt(bitPattern: Int(bitPattern: lhsOffset)))
+            )
+            let rhsIdx = Index<Element>(
+                _unchecked: Ordinal(UInt(bitPattern: Int(bitPattern: rhsOffset)))
+            )
             newStorage.append(self._storage[lhsIdx] + other._storage[rhsIdx])
         }
         return Tensor.Value<Element, Rank, Tensor.Layout.Order.Row>(
@@ -60,7 +66,9 @@ where
     ) throws(Tensor.Broadcast.Error) -> Tensor.Value<Element, Rank, Tensor.Layout.Order.Row> {
         let aligned = try Tensor.Broadcast.align(self._shape, other._shape)
         let count = aligned.count
-        var newStorage = Buffer<Storage_Primitive.Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Element>>.Linear(
+        var newStorage = Buffer<
+            Storage_Primitive.Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Element>
+        >.Linear(
             minimumCapacity: Index<Element>.Count(count)
         )
         // Stride-aware broadcast traversal — see `adding(_:)` above.
@@ -71,8 +79,12 @@ where
             let position = Tensor.Broadcast.position(ofLinearIndex: i, in: aligned)
             let lhsOffset = position.linearize(strides: lhsStrides)
             let rhsOffset = position.linearize(strides: rhsStrides)
-            let lhsIdx = Index<Element>(_unchecked: Ordinal(UInt(bitPattern: Int(bitPattern: lhsOffset))))
-            let rhsIdx = Index<Element>(_unchecked: Ordinal(UInt(bitPattern: Int(bitPattern: rhsOffset))))
+            let lhsIdx = Index<Element>(
+                _unchecked: Ordinal(UInt(bitPattern: Int(bitPattern: lhsOffset)))
+            )
+            let rhsIdx = Index<Element>(
+                _unchecked: Ordinal(UInt(bitPattern: Int(bitPattern: rhsOffset)))
+            )
             newStorage.append(self._storage[lhsIdx] - other._storage[rhsIdx])
         }
         return Tensor.Value<Element, Rank, Tensor.Layout.Order.Row>(
@@ -95,7 +107,9 @@ where
     ) throws(Tensor.Broadcast.Error) -> Tensor.Value<Element, Rank, Tensor.Layout.Order.Row> {
         let aligned = try Tensor.Broadcast.align(self._shape, other._shape)
         let count = aligned.count
-        var newStorage = Buffer<Storage_Primitive.Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Element>>.Linear(
+        var newStorage = Buffer<
+            Storage_Primitive.Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Element>
+        >.Linear(
             minimumCapacity: Index<Element>.Count(count)
         )
         // Stride-aware broadcast traversal — see `Tensor.Value.adding(_:)`.
@@ -106,8 +120,12 @@ where
             let position = Tensor.Broadcast.position(ofLinearIndex: i, in: aligned)
             let lhsOffset = position.linearize(strides: lhsStrides)
             let rhsOffset = position.linearize(strides: rhsStrides)
-            let lhsIdx = Index<Element>(_unchecked: Ordinal(UInt(bitPattern: Int(bitPattern: lhsOffset))))
-            let rhsIdx = Index<Element>(_unchecked: Ordinal(UInt(bitPattern: Int(bitPattern: rhsOffset))))
+            let lhsIdx = Index<Element>(
+                _unchecked: Ordinal(UInt(bitPattern: Int(bitPattern: lhsOffset)))
+            )
+            let rhsIdx = Index<Element>(
+                _unchecked: Ordinal(UInt(bitPattern: Int(bitPattern: rhsOffset)))
+            )
             newStorage.append(self._storage[lhsIdx] * other._storage[rhsIdx])
         }
         return Tensor.Value<Element, Rank, Tensor.Layout.Order.Row>(
@@ -121,7 +139,9 @@ where
     @inlinable
     public func scaled(by scalar: Element) -> Tensor.Value<Element, Rank, Tensor.Layout.Order.Row> {
         let count = self._shape.count
-        var newStorage = Buffer<Storage_Primitive.Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Element>>.Linear(
+        var newStorage = Buffer<
+            Storage_Primitive.Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Element>
+        >.Linear(
             minimumCapacity: Index<Element>.Count(count)
         )
         // Single-buffer scaling via Swift.Sequence iteration on Buffer.Linear.

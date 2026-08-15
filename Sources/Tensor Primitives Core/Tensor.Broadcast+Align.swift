@@ -50,10 +50,14 @@ extension Tensor.Broadcast {
                 dims[axis] = a
             } else {
                 // WHY: axis ≥ 0 by construction; Int → Cardinal is total in this range.
-                // swift-format-ignore: NeverUseForceTry
-                // swiftlint:disable:next force_try
+                let axisCardinal: Cardinal
+                do throws(Cardinal.Error) {
+                    axisCardinal = try Cardinal(axis)
+                } catch {
+                    preconditionFailure("axis ≥ 0 by construction: \(error)")
+                }
                 throw .incompatibleShapes(
-                    axis: try! Cardinal(axis),
+                    axis: axisCardinal,
                     lhs: a,
                     rhs: b
                 )
