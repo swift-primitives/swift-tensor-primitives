@@ -21,7 +21,9 @@ extension Tensor.Value where Element: Copyable {
         _ transform: (Element) throws(E) -> NewElement
     ) throws(E) -> Tensor.Value<NewElement, Rank, Tensor.Layout.Order.Row> {
         let count = self._shape.count
-        var storage = Buffer<Storage_Primitive.Storage<Memory.Allocator<Memory.Heap>>.Contiguous<NewElement>>.Linear(
+        var storage = Buffer<
+            Storage_Primitive.Storage<Memory.Allocator<Memory.Heap>>.Contiguous<NewElement>
+        >.Linear(
             minimumCapacity: Index<NewElement>.Count(count)
         )
         // Iterate elements by linear index. The W3 substrate

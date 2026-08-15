@@ -34,7 +34,9 @@ extension Tensor {
     /// per-axis cardinalities. Per [MEM-SAFE-022] `~Escapable` exception,
     /// public pointer exposure is structurally safe.
     @safe
-    public struct View<Element: ~Copyable, let Rank: Int, Layout: Tensor.Layout.`Protocol`>: ~Copyable, ~Escapable {
+    public struct View<Element: ~Copyable, let Rank: Int, Layout: Tensor.Layout.`Protocol`>:
+        ~Copyable, ~Escapable
+    {
         /// View shape (may differ from owner's after slicing / broadcast).
         @usableFromInline
         package var _shape: Tensor.Shape<Rank>

@@ -59,10 +59,14 @@ extension Tensor.Index.Position {
             if position >= bound {
                 // WHY: k ranges over 0..<Rank, always non-negative; Int → Cardinal is
                 // total in this range.
-                // swift-format-ignore: NeverUseForceTry
-                // swiftlint:disable:next force_try
+                let axisCardinal: Cardinal
+                do throws(Cardinal.Error) {
+                    axisCardinal = try Cardinal(k)
+                } catch {
+                    preconditionFailure("k ranges over 0..<Rank, always non-negative: \(error)")
+                }
                 throw .outOfBounds(
-                    axis: try! Cardinal(k),
+                    axis: axisCardinal,
                     position: position,
                     bound: bound
                 )

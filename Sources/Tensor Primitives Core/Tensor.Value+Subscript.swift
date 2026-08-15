@@ -29,7 +29,9 @@ extension Tensor.Value where Element: Copyable {
         // for a base tensor, so the `Vector → Int → UInt → Ordinal → Index`
         // chain is total. `_unchecked` expresses the static-guarantee directly
         // without a `try!`-on-throwing-arithmetic ceremony.
-        let flatIndex = Index<Element>(_unchecked: Ordinal(UInt(bitPattern: Int(bitPattern: offset))))
+        let flatIndex = Index<Element>(
+            _unchecked: Ordinal(UInt(bitPattern: Int(bitPattern: offset)))
+        )
         return _storage[flatIndex]
     }
 }
