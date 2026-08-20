@@ -1,14 +1,14 @@
-// swift-tools-version: 6.3.3
+// swift-tools-version: 6.4
 import PackageDescription
 
 let package = Package(
     name: "swift-tensor-primitives",
     platforms: [
-        .macOS("27"),
-        .iOS("27"),
-        .tvOS("27"),
-        .watchOS("27"),
-        .visionOS("27"),
+        .macOS(.v27),
+        .iOS(.v27),
+        .tvOS(.v27),
+        .watchOS(.v27),
+        .visionOS(.v27),
     ],
     products: [
         .library(
@@ -29,26 +29,86 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/swift-primitives/swift-tagged-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-primitives/swift-index-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-primitives/swift-cardinal-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-primitives/swift-ordinal-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-primitives/swift-finite-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-primitives/swift-affine-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-primitives/swift-dimension-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-primitives/swift-buffer-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-primitives/swift-buffer-linear-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-primitives/swift-storage-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-primitives/swift-range-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-primitives/swift-memory-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-primitives/swift-numeric-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-primitives/swift-algebra-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-primitives/swift-error-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-primitives/swift-format-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-primitives/swift-sequence-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-primitives/swift-vector-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-primitives/swift-memory-heap-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-primitives/swift-memory-allocation-primitives.git", branch: "main"),
+        .package(
+            url: "https://github.com/swift-primitives/swift-tagged-primitives.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-primitives/swift-index-primitives.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-primitives/swift-cardinal-primitives.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-primitives/swift-ordinal-primitives.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-primitives/swift-finite-primitives.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-primitives/swift-affine-primitives.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-primitives/swift-dimension-primitives.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-primitives/swift-buffer-primitives.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-primitives/swift-buffer-linear-primitives.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-primitives/swift-storage-primitives.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-primitives/swift-range-primitives.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-primitives/swift-memory-primitives.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-primitives/swift-numeric-primitives.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-primitives/swift-algebra-primitives.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-primitives/swift-error-primitives.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-primitives/swift-format-primitives.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-primitives/swift-sequence-primitives.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-primitives/swift-vector-primitives.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-primitives/swift-memory-heap-primitives.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-primitives/swift-memory-allocation-primitives.git",
+            branch: "main"
+        ),
     ],
     targets: [
 
@@ -64,12 +124,21 @@ let package = Package(
                 .product(name: "Affine Primitives", package: "swift-affine-primitives"),
                 .product(name: "Dimension Primitives", package: "swift-dimension-primitives"),
                 .product(name: "Buffer Primitives", package: "swift-buffer-primitives"),
-                .product(name: "Buffer Linear Primitives", package: "swift-buffer-linear-primitives"),
+                .product(
+                    name: "Buffer Linear Primitives",
+                    package: "swift-buffer-linear-primitives"
+                ),
                 .product(name: "Storage Primitives", package: "swift-storage-primitives"),
                 .product(name: "Range Primitives", package: "swift-range-primitives"),
                 .product(name: "Memory Primitives", package: "swift-memory-primitives"),
-                .product(name: "Memory Allocator Primitive", package: "swift-memory-allocation-primitives"),
-                .product(name: "Memory Allocator Protocol Primitives", package: "swift-memory-allocation-primitives"),
+                .product(
+                    name: "Memory Allocator Primitive",
+                    package: "swift-memory-allocation-primitives"
+                ),
+                .product(
+                    name: "Memory Allocator Protocol Primitives",
+                    package: "swift-memory-allocation-primitives"
+                ),
                 .product(name: "Numeric Primitives", package: "swift-numeric-primitives"),
                 .product(name: "Algebra Ring Primitives", package: "swift-algebra-primitives"),
                 .product(name: "Error Primitives", package: "swift-error-primitives"),
@@ -110,7 +179,10 @@ let package = Package(
             name: "Tensor Primitives Test Support",
             dependencies: [
                 "Tensor Primitives",
-                .product(name: "Buffer Primitives Test Support", package: "swift-buffer-primitives"),
+                .product(
+                    name: "Buffer Primitives Test Support",
+                    package: "swift-buffer-primitives"
+                ),
             ],
             path: "Tests/Support"
         ),
