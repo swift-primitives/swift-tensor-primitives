@@ -1,28 +1,10 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-primitives open source project
-//
-// Copyright (c) 2024-2026 Coen ten Thije Boonkkamp and the swift-primitives project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 extension Tensor.Value
 where
     Element: Copyable & Swift.Numeric,
     Layout == Tensor.Layout.Order.Row,
     Rank == 2
 {
-    /// Pure-Swift naive matrix multiplication for rank-2 tensors.
-    ///
-    /// Computes `C[i,k] = Σⱼ A[i,j] · B[j,k]` for `A: (m, p)` and `B: (p, n)`.
-    /// Output shape is `(m, n)`. Algorithm is naive O(n³); BLAS-dispatched
-    /// matmul lives at L3 `swift-tensors` per [PLAT-ARCH-008j].
-    ///
-    /// - Throws: `Tensor.Broadcast.Error.incompatibleShapes` when the inner
-    ///   dimensions don't match.
+
     @inlinable
     public func multiplied(
         by other: borrowing Tensor.Value<Element, 2, Layout>
@@ -47,14 +29,6 @@ where
             minimumCapacity: Index<Element>.Count(total)
         )
 
-        // Stride math at the L1 boundary: BLAS-style ijk matmul with explicit
-        // stride accumulation. `aRowStride * i + aColStride * j` is the same
-        // dimension-mixing `Ordinal × Vector` math as linearize per [INFRA-200].
-        // The bodies are non-throwing (the index advance is via `_unchecked`
-        // construction), so stdlib `Range.forEach` suffices — no need to climb
-        // to the typed-throws `forEach` Property path (which is
-        // [IMPL-033]'s remedy for typed-throws contexts, not for
-        // non-throwing iteration).
         let mInt = Int(bitPattern: m)
         let pInt = Int(bitPattern: p)
         let nInt = Int(bitPattern: n)
@@ -67,11 +41,7 @@ where
             (0..<nInt).forEach { k in
                 var accumulator = Element.zero
                 (0..<pInt).forEach { j in
-                    // aOffset / bOffset are non-negative by construction
-                    // (i, j, k ≥ 0 and strides ≥ 0 for a base tensor), so the
-                    // `Int → UInt → Ordinal → Index<Element>` chain is total.
-                    // `_unchecked` expresses the static-guarantee directly
-                    // without a `try!`-on-throwing-arithmetic ceremony.
+
                     let aOffset = i * aRowStride + j * aColStride
                     let bOffset = j * bRowStride + k * bColStride
                     let aIdx = Index<Element>(_unchecked: Ordinal(UInt(bitPattern: aOffset)))

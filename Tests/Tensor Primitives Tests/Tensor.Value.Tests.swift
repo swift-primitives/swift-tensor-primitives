@@ -1,19 +1,5 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-primitives open source project
-//
-// Copyright (c) 2024-2026 Coen ten Thije Boonkkamp and the swift-primitives project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Tensor_Primitives_Test_Support
 import Testing
-
-// `Tensor.Value<Element, Rank, Layout>` is generic, so per [SWIFT-TEST-003] we use
-// the parallel-namespace pattern rather than `extension Tensor.Value { @Suite struct Test {} }`.
 
 @Suite
 struct `Tensor Value Tests` {
@@ -49,7 +35,6 @@ extension `Tensor Value Tests`.Unit {
             elements: [10, 20, 30, 40, 50, 60]
         )
 
-        // (0,0) → 10, (0,2) → 30, (1,0) → 40, (1,2) → 60
         for (i, j, expected) in [(0, 0, 10), (0, 2, 30), (1, 0, 40), (1, 2, 60)] {
             var positions = InlineArray<2, Ordinal>(repeating: Ordinal(0))
             positions[0] = Ordinal(UInt(i))
@@ -72,7 +57,7 @@ extension `Tensor Value Tests`.`Edge Case` {
         do throws(Tensor.Shape<2>.Error) {
             _ = try Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
                 shape: shape,
-                elements: [1, 2, 3]  // 3 elements, shape needs 6
+                elements: [1, 2, 3]
             )
             #expect(Bool(false), "Expected throw")
         } catch let error {
@@ -92,7 +77,7 @@ extension `Tensor Value Tests`.`Edge Case` {
         )
 
         var positions = InlineArray<2, Ordinal>(repeating: Ordinal(0))
-        positions[0] = Ordinal(5)  // out of bounds (only 0..<2)
+        positions[0] = Ordinal(5)
         positions[1] = Ordinal(0)
         let pos = Tensor.Index.Position<2>(positions)
 

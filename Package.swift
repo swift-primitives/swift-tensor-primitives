@@ -112,7 +112,6 @@ let package = Package(
     ],
     targets: [
 
-        // MARK: - Core
         .target(
             name: "Tensor Primitives Core",
             dependencies: [
@@ -148,7 +147,6 @@ let package = Package(
             ]
         ),
 
-        // MARK: - Variants
         .target(
             name: "Tensor Dynamic Primitives",
             dependencies: [
@@ -164,7 +162,6 @@ let package = Package(
             ]
         ),
 
-        // MARK: - Umbrella
         .target(
             name: "Tensor Primitives",
             dependencies: [
@@ -174,7 +171,6 @@ let package = Package(
             ]
         ),
 
-        // MARK: - Test Support
         .target(
             name: "Tensor Primitives Test Support",
             dependencies: [
@@ -187,7 +183,6 @@ let package = Package(
             path: "Tests/Support"
         ),
 
-        // MARK: - Tests
         .testTarget(
             name: "Tensor Primitives Tests",
             dependencies: [

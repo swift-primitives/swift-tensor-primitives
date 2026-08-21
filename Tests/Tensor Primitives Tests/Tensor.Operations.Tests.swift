@@ -1,19 +1,5 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-primitives open source project
-//
-// Copyright (c) 2024-2026 Coen ten Thije Boonkkamp and the swift-primitives project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Tensor_Primitives_Test_Support
 import Testing
-
-// `Tensor.Value<Element, Rank, Layout>` is generic, so per [SWIFT-TEST-003] we use
-// the parallel-namespace pattern rather than `extension Tensor.Value { @Suite struct Test {} }`.
 
 @Suite
 struct `Tensor Value Operations Tests` {
@@ -23,12 +9,6 @@ struct `Tensor Value Operations Tests` {
     @Suite(.serialized) struct Performance {}
 }
 
-// MARK: - Test Helpers
-
-/// Reads element at coordinates (i, j) from a rank-2 tensor.
-///
-/// Lifted to file scope so each test extension can call it. The name uses
-/// the `read.element(at:_:)` nested-accessor form per [API-NAME-002].
 private func readElement<Element: Copyable, Layout: Tensor.Layout.`Protocol`>(
     from tensor: borrowing Tensor.Value<Element, 2, Layout>,
     at i: Int,
@@ -41,7 +21,6 @@ private func readElement<Element: Copyable, Layout: Tensor.Layout.`Protocol`>(
     return try tensor.element(at: pos)
 }
 
-/// Constructs a rank-2 shape with given rows and columns.
 private func rank2Shape(_ rows: Int, _ cols: Int) -> Tensor.Shape<2> {
     var dims = InlineArray<2, Cardinal>(repeating: .zero)
     dims[0] = Cardinal(UInt(rows))
@@ -49,7 +28,6 @@ private func rank2Shape(_ rows: Int, _ cols: Int) -> Tensor.Shape<2> {
     return Tensor.Shape<2>(dims)
 }
 
-/// Reads element at coordinates (i, j, k) from a rank-3 tensor.
 private func readElement3<Element: Copyable, Layout: Tensor.Layout.`Protocol`>(
     from tensor: borrowing Tensor.Value<Element, 3, Layout>,
     at i: Int,
@@ -64,7 +42,6 @@ private func readElement3<Element: Copyable, Layout: Tensor.Layout.`Protocol`>(
     return try tensor.element(at: pos)
 }
 
-/// Constructs a rank-3 shape with the given per-axis cardinalities.
 private func rank3Shape(_ d0: Int, _ d1: Int, _ d2: Int) -> Tensor.Shape<3> {
     var dims = InlineArray<3, Cardinal>(repeating: .zero)
     dims[0] = Cardinal(UInt(d0))
@@ -72,8 +49,6 @@ private func rank3Shape(_ d0: Int, _ d1: Int, _ d2: Int) -> Tensor.Shape<3> {
     dims[2] = Cardinal(UInt(d2))
     return Tensor.Shape<3>(dims)
 }
-
-// MARK: - Unit Tests
 
 extension `Tensor Value Operations Tests`.Unit {
     @Test
@@ -160,8 +135,7 @@ extension `Tensor Value Operations Tests`.Unit {
             shape: shape,
             elements: [1, 2, 3, 4, 5, 6]
         )
-        // Original: [[1,2,3],[4,5,6]]
-        // Transposed: [[1,4],[2,5],[3,6]]
+
         let tA = a.transposed()
         #expect(tA.shape.dims[0] == Cardinal(3))
         #expect(tA.shape.dims[1] == Cardinal(2))
@@ -182,10 +156,7 @@ extension `Tensor Value Operations Tests`.Unit {
             shape: bShape,
             elements: [7, 8, 9, 10, 11, 12]
         )
-        // [[1,2,3],[4,5,6]] · [[7,8],[9,10],[11,12]]
-        // = [[1·7+2·9+3·11, 1·8+2·10+3·12],
-        //    [4·7+5·9+6·11, 4·8+5·10+6·12]]
-        // = [[58, 64], [139, 154]]
+
         let c = try a.multiplied(by: b)
         #expect(c.shape.dims[0] == Cardinal(2))
         #expect(c.shape.dims[1] == Cardinal(2))
@@ -197,7 +168,7 @@ extension `Tensor Value Operations Tests`.Unit {
 
     @Test
     func `reshape from rank-1 to rank-2 preserves elements`() throws {
-        // Start with a rank-1 tensor of 6, reshape to (2,3) then (3,2).
+
         var dims1 = InlineArray<1, Cardinal>(repeating: .zero)
         dims1[0] = Cardinal(6)
         let shape1 = Tensor.Shape<1>(dims1)
@@ -230,14 +201,6 @@ extension `Tensor Value Operations Tests`.Unit {
         #expect(try readElement(from: doubled, at: 0, 0) == 2)
         #expect(try readElement(from: doubled, at: 1, 1) == 8)
     }
-
-    // MARK: - F-001 regression: broadcast arithmetic must not read past the
-    // smaller operand's buffer at the shared linear offset. Each case below
-    // has an aligned output element count strictly greater than at least one
-    // operand's own element count, so a naive shared-linear-offset kernel
-    // either indexes out of bounds (traps) or, when it doesn't trap, mixes
-    // up the wrong elements — it must instead repeat the stretched axis via
-    // zero-stride reads.
 
     @Test
     func `broadcast addition of (1,3) and (2,3) repeats the length-1 row`() throws {
@@ -361,8 +324,6 @@ extension `Tensor Value Operations Tests`.Unit {
     }
 }
 
-// MARK: - Integration Tests
-
 extension `Tensor Value Operations Tests`.Integration {
     @Test
     func `broadcast align on same shape returns same shape`() throws(Tensor.Broadcast.Error) {
@@ -389,13 +350,11 @@ extension `Tensor Value Operations Tests`.Integration {
     }
 }
 
-// MARK: - Edge Case Tests
-
 extension `Tensor Value Operations Tests`.`Edge Case` {
     @Test
     func `matmul with incompatible inner dim throws incompatibleShapes`() throws {
         let aShape = rank2Shape(2, 3)
-        let bShape = rank2Shape(4, 2)  // inner dim 3 ≠ 4
+        let bShape = rank2Shape(4, 2)
         let a = try Tensor.Value<Int, 2, Tensor.Layout.Order.Row>(
             shape: aShape,
             elements: [1, 2, 3, 4, 5, 6]

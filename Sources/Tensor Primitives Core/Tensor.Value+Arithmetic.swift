@@ -1,25 +1,9 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-primitives open source project
-//
-// Copyright (c) 2024-2026 Coen ten Thije Boonkkamp and the swift-primitives project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 extension Tensor.Value
 where
     Element: Copyable & AdditiveArithmetic,
     Layout == Tensor.Layout.Order.Row
 {
-    /// Element-wise addition with broadcast.
-    ///
-    /// Shapes are aligned via `Tensor.Broadcast.align(_:_:)`. Mismatched
-    /// non-unit lengths produce `Tensor.Broadcast.Error.incompatibleShapes`.
-    ///
-    /// - Throws: `Tensor.Broadcast.Error` on shape mismatch.
+
     @inlinable
     public func adding(
         _ other: borrowing Tensor.Value<Element, Rank, Layout>
@@ -31,12 +15,7 @@ where
         >.Linear(
             minimumCapacity: Index<Element>.Count(count)
         )
-        // Stride-aware broadcast traversal. Each operand reads through its
-        // own stride vector against the aligned output shape — zero stride
-        // on any axis it stretches (`Tensor.Broadcast.strides(of:aligned:)`)
-        // — so a length-1 axis repeats its single element for every output
-        // position along that axis instead of walking off the end of the
-        // smaller operand's buffer at the shared linear offset.
+
         let lhsStrides = Tensor.Broadcast.strides(of: self._shape, aligned: aligned)
         let rhsStrides = Tensor.Broadcast.strides(of: other._shape, aligned: aligned)
         let n = Int(bitPattern: count)
@@ -59,7 +38,6 @@ where
         )
     }
 
-    /// Element-wise subtraction.
     @inlinable
     public func subtracting(
         _ other: borrowing Tensor.Value<Element, Rank, Layout>
@@ -71,7 +49,7 @@ where
         >.Linear(
             minimumCapacity: Index<Element>.Count(count)
         )
-        // Stride-aware broadcast traversal — see `adding(_:)` above.
+
         let lhsStrides = Tensor.Broadcast.strides(of: self._shape, aligned: aligned)
         let rhsStrides = Tensor.Broadcast.strides(of: other._shape, aligned: aligned)
         let n = Int(bitPattern: count)
@@ -100,7 +78,7 @@ where
     Element: Copyable & Swift.Numeric,
     Layout == Tensor.Layout.Order.Row
 {
-    /// Element-wise multiplication with broadcast.
+
     @inlinable
     public func multiplying(
         elementWise other: borrowing Tensor.Value<Element, Rank, Layout>
@@ -112,7 +90,7 @@ where
         >.Linear(
             minimumCapacity: Index<Element>.Count(count)
         )
-        // Stride-aware broadcast traversal — see `Tensor.Value.adding(_:)`.
+
         let lhsStrides = Tensor.Broadcast.strides(of: self._shape, aligned: aligned)
         let rhsStrides = Tensor.Broadcast.strides(of: other._shape, aligned: aligned)
         let n = Int(bitPattern: count)
@@ -135,7 +113,6 @@ where
         )
     }
 
-    /// Scalar multiplication.
     @inlinable
     public func scaled(by scalar: Element) -> Tensor.Value<Element, Rank, Tensor.Layout.Order.Row> {
         let count = self._shape.count
@@ -144,7 +121,7 @@ where
         >.Linear(
             minimumCapacity: Index<Element>.Count(count)
         )
-        // Single-buffer scaling via Swift.Sequence iteration on Buffer.Linear.
+
         self._storage.forEach { element in
             newStorage.append(element * scalar)
         }

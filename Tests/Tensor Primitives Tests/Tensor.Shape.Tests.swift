@@ -1,19 +1,5 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-primitives open source project
-//
-// Copyright (c) 2024-2026 Coen ten Thije Boonkkamp and the swift-primitives project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Tensor_Primitives_Test_Support
 import Testing
-
-// `Tensor.Shape<Rank>` is generic, so per [SWIFT-TEST-003] we use the
-// parallel-namespace pattern rather than `extension Tensor.Shape { @Suite struct Test {} }`.
 
 @Suite
 struct `Tensor Shape Tests` {
